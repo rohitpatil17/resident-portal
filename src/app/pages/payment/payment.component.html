@@ -1,0 +1,85 @@
+<!-- src/app/pages/payment/payment.component.html -->
+
+<div class="payment-page" *ngIf="balance">
+  <div class="payment-layout">
+
+    <!-- LEFT: Actions -->
+    <div class="payment-left">
+
+      <!-- Balance summary -->
+      <div class="pay-balance animate">
+        <div class="balance-row">
+          <div>
+            <div class="bal-label">Total Amount Due</div>
+            <div class="bal-amount"><span class="cur">$</span>{{ balance.totalDue | number:'1.2-2' }}</div>
+          </div>
+          <div>
+            <div class="bal-label">Current Amount Due</div>
+            <div class="bal-amount"><span class="cur">$</span>{{ balance.currentDue | number:'1.2-2' }}</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- AutoPay banner -->
+      <div class="autopay-banner animate delay-1">
+        <div class="ap-text">
+          <div class="ap-title">AutoPay is currently OFF</div>
+          <div class="ap-sub">Enable AutoPay to never miss a payment</div>
+        </div>
+        <button class="toggle-btn" (click)="setupAutoPay()">Enable AutoPay</button>
+      </div>
+
+      <!-- Payment buttons -->
+      <div class="pay-methods animate delay-2">
+        <button class="pay-btn primary" (click)="setupAutoPay()">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+          </svg>
+          Setup AutoPay with Bank Account
+        </button>
+        <button class="pay-btn secondary" (click)="oneTimePayment()">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="2" y="5" width="20" height="14" rx="2"/>
+            <path d="M2 10h20"/>
+          </svg>
+          One Time Payment for Site 29
+        </button>
+      </div>
+    </div>
+
+    <!-- RIGHT: Summary -->
+    <div class="payment-summary card animate delay-1">
+      <h3>Payment Summary</h3>
+
+      <div class="summary-row">
+        <span class="s-label">Site</span>
+        <span class="s-value">#29 Apple Meadow</span>
+      </div>
+      <div class="summary-row">
+        <span class="s-label">Resident</span>
+        <span class="s-value">Tony</span>
+      </div>
+      <div class="summary-row">
+        <span class="s-label">Lot Rent</span>
+        <span class="s-value">{{ formatCurrency(balance.lotRent) }}</span>
+      </div>
+      <div class="summary-row">
+        <span class="s-label">Past Balance</span>
+        <span class="s-value due">{{ formatCurrency(balance.pastBalance) }}</span>
+      </div>
+      <div class="summary-row">
+        <span class="s-label">Late Fees</span>
+        <span class="s-value">{{ formatCurrency(balance.lateFees) }}</span>
+      </div>
+      <div class="summary-row total">
+        <span class="s-label">Total Due</span>
+        <span class="s-value total-val">{{ formatCurrency(balance.totalDue) }}</span>
+      </div>
+
+      <div class="security-note">
+        🔒 Payments secured with 256-bit SSL. ACH payments take 2–3 business days to process.
+      </div>
+    </div>
+
+  </div>
+</div>

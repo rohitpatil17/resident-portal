@@ -1,0 +1,66 @@
+<!-- src/app/shared/components/sidebar/sidebar.component.html -->
+
+<aside class="sidebar">
+
+  <!-- Mobile close button -->
+  <button class="mobile-close" (click)="close()">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+    </svg>
+  </button>
+
+  <!-- Logo — real ManageAmerica image (white version) -->
+  <div class="sidebar-logo">
+    <img class="logo-img" src="assets/manage-america-logo-white.png" alt="ManageAmerica">
+  </div>
+
+  <!-- User info -->
+  <div class="sidebar-user" *ngIf="resident$ | async as resident">
+    <div class="user-avatar">{{ resident.name.charAt(0) }}</div>
+    <div class="user-info">
+      <div class="user-name">{{ resident.name }}</div>
+      <div class="user-unit">{{ resident.unit }} {{ resident.community }}</div>
+    </div>
+  </div>
+
+  <!-- Main navigation -->
+  <nav class="sidebar-nav">
+    <div class="nav-section-label">Main</div>
+
+    <a
+      *ngFor="let item of mainNav"
+      class="nav-item"
+      [routerLink]="item.route"
+      routerLinkActive="active"
+      (click)="close()">
+      <span class="nav-icon" [innerHTML]="getIcon(item.icon)"></span>
+      {{ item.label }}
+      <span *ngIf="item.badge" class="nav-badge">{{ item.badge }}</span>
+    </a>
+
+    <div class="nav-section-label">Resources</div>
+
+    <a
+      *ngFor="let item of resourceNav"
+      class="nav-item"
+      [routerLink]="item.route"
+      routerLinkActive="active"
+      (click)="close()">
+      <span class="nav-icon" [innerHTML]="getIcon(item.icon)"></span>
+      {{ item.label }}
+    </a>
+  </nav>
+
+  <!-- Logout -->
+  <div class="sidebar-footer">
+    <button class="logout-btn" (click)="logout()">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+        <polyline points="16 17 21 12 16 7"/>
+        <line x1="21" y1="12" x2="9" y2="12"/>
+      </svg>
+      Log out
+    </button>
+  </div>
+
+</aside>

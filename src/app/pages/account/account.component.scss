@@ -1,0 +1,32 @@
+// src/app/pages/account/account.component.scss
+
+.account-row {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 17px 0; border-bottom: 1px solid var(--gray-100);
+  gap: 16px;
+  &:last-child { border-bottom: none; }
+}
+
+.row-title { font-size: 14px; font-weight: 700; color: var(--purple); }
+.row-desc  { font-size: 12px; color: var(--gray-400); margin-top: 3px; line-height: 1.5; }
+
+.btn-view {
+  padding: 7px 19px; border-radius: 9px;
+  border: 1.5px solid var(--gray-200); background: white;
+  font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 600;
+  color: var(--navy); cursor: pointer; transition: all .18s; white-space: nowrap; flex-shrink: 0;
+  &:hover:not(.disabled) { border-color: var(--purple); color: var(--purple); background: var(--purple-bg); }
+  &.disabled { opacity: .35; cursor: not-allowed; }
+}
+
+// ── RESPONSIVE ──────────────────────────────────────────────────────────────
+@media (max-width: 768px) {
+  .account-row { padding: 14px 0; }
+  .row-title   { font-size: 13px; }
+  .btn-view    { padding: 6px 14px; font-size: 12px; }
+}
+
+@media (max-width: 480px) {
+  .account-row { flex-wrap: wrap; gap: 10px; }
+  .btn-view    { width: 100%; text-align: center; }
+}

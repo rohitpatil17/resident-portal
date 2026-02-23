@@ -1,0 +1,81 @@
+<!-- src/app/pages/billing/billing.component.html -->
+
+<div class="billing-page">
+
+  <!-- Tabs -->
+  <div class="tabs animate">
+    <button class="tab" [class.active]="activeTab === 'billing'"  (click)="setTab('billing')">Billing History</button>
+    <button class="tab" [class.active]="activeTab === 'payments'" (click)="setTab('payments')">Payment History</button>
+    <button class="tab" [class.active]="activeTab === 'settings'" (click)="setTab('settings')">E-Billing Settings</button>
+  </div>
+
+  <!-- Billing History -->
+  <div *ngIf="activeTab === 'billing'" class="tab-content card animate delay-1">
+    <table class="billing-table">
+      <thead>
+        <tr>
+          <th>Period</th>
+          <th>Description</th>
+          <th>Amount</th>
+          <th>Status</th>
+          <th class="text-right">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let s of statements">
+          <td><span class="bill-period">{{ s.period }}</span></td>
+          <td class="desc">{{ s.description }}</td>
+          <td class="amount">{{ formatCurrency(s.amount) }}</td>
+          <td>
+            <span class="status-badge" [ngClass]="s.status">
+              {{ s.status === 'paid' ? '✓ Paid' : '⏳ Pending' }}
+            </span>
+          </td>
+          <td class="text-right">
+            <button class="bill-btn outline" (click)="viewStatement(s.id)">View</button>
+            <button class="bill-btn filled" (click)="downloadStatement(s.id)">Download</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Payment History -->
+  <div *ngIf="activeTab === 'payments'" class="tab-content card animate delay-1">
+    <table class="billing-table">
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Description</th>
+          <th>Method</th>
+          <th>Amount</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let tx of transactions">
+          <td class="desc">{{ tx.date }}</td>
+          <td><span class="bill-period">{{ tx.description }}</span></td>
+          <td class="desc">{{ tx.method || '—' }}</td>
+          <td class="amount">{{ formatCurrency(tx.amount) }}</td>
+          <td>
+            <span class="status-badge" [ngClass]="tx.status">
+              {{ tx.status === 'paid' ? '✓ Paid' : tx.status === 'pending' ? '⏳ Pending' : '✗ Failed' }}
+            </span>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- E-Billing Settings -->
+  <div *ngIf="activeTab === 'settings'" class="tab-content animate delay-1">
+    <div class="settings-grid">
+      <div class="settings-card" *ngFor="let s of eBillingSettings">
+        <div class="s-title">{{ s.title }}</div>
+        <div class="s-desc">{{ s.desc }}</div>
+      </div>
+    </div>
+  </div>
+
+</div>

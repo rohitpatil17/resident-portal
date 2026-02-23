@@ -1,0 +1,43 @@
+// src/app/shared/components/logo/logo.component.scss
+
+.ma-logo {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.ma-logo-row {
+  display: flex;
+  align-items: center;
+}
+
+.ma-word {
+  font-family: 'DM Sans', sans-serif;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  line-height: 1;
+
+  &.dark { color: var(--navy); }
+  &.light { color: var(--white); }
+  &.lg { font-size: 28px; }
+  &.sm { font-size: 15px; }
+}
+
+.ma-icon {
+  margin: 0 3px;
+  display: inline-flex;
+  align-items: center;
+}
+
+.ma-sub {
+  font-family: 'DM Sans', sans-serif;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 2.5px;
+  padding-left: 2px;
+
+  &.dark { color: var(--gray-400); }
+  &.light { color: rgba(255, 255, 255, 0.4); }
+  &.lg { font-size: 9.5px; }
+  &.sm { font-size: 7px; letter-spacing: 1.8px; }
+}
