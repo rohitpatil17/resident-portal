@@ -34,19 +34,21 @@ export class LoginComponent {
       return;
     }
     this.isLoading = true;
-    setTimeout(() => {
-      const success = this.auth.login(this.username, this.password);
-      this.isLoading = false;
-      if (success) {
+    this.auth.login(this.username, this.password).subscribe({
+      next: () => {
+        this.isLoading = false;
         this.router.navigate(['/dashboard']);
-      } else {
+      },
+      error: () => {
+        this.isLoading = false;
         this.errorMessage = 'Invalid credentials. Please try again.';
       }
-    }, 800);
+    });
   }
 
   onRhpLogin(): void {
-    this.auth.login('rhp-user', 'rhp-pass');
-    this.router.navigate(['/dashboard']);
+    this.auth.login('rhp-user', 'rhp-pass').subscribe({
+      next: () => this.router.navigate(['/dashboard'])
+    });
   }
 }
