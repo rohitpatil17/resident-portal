@@ -9,6 +9,11 @@ export interface Resident {
   phone: string;
 }
 
+export interface LoginResponse {
+  token: string;
+  resident: Resident;
+}
+
 export interface BalanceSummary {
   totalDue: number;
   currentDue: number;
