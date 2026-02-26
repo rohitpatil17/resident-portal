@@ -2,50 +2,161 @@
 
 <div *ngIf="balance" class="dashboard">
 
-  <!-- Balance Card -->
+  <!-- ── Balance Card ──────────────────────────────────────────────────── -->
   <div class="balance-card animate">
     <div class="balance-inner">
+
       <div class="balance-left">
         <div class="balance-label">Total Amount Due</div>
+
         <div class="balance-amount">
           <span class="currency">$</span>{{ balance.totalDue | number:'1.2-2' }}
         </div>
-        <div class="balance-due">Due by <strong>{{ balance.dueDate }}</strong></div>
+
+        <!-- due date + context inline -->
+        <div class="balance-meta">
+          <span>Due by</span>
+          <strong>{{ balance.dueDate }}</strong>
+          <span class="meta-sep"></span>
+          <span>{{ dueDateContext }}</span>
+        </div>
+
+        <!-- inline chip row — replaces stacked bd-item blocks -->
         <div class="balance-breakdown">
-          <div class="bd-item"><div class="bd-label">Lot Rent</div><div class="bd-value green">{{ formatCurrency(balance.lotRent) }}</div></div>
-          <div class="bd-item"><div class="bd-label">Past Balance</div><div class="bd-value red">{{ formatCurrency(balance.pastBalance) }}</div></div>
-          <div class="bd-item"><div class="bd-label">Late Fees</div><div class="bd-value red">{{ formatCurrency(balance.lateFees) }}</div></div>
+          <div class="bc-chip">
+            <span class="bc-chip-label">Rent</span>
+            <span class="bc-chip-value green">{{ formatCurrency(balance.lotRent) }}</span>
+          </div>
+          <div class="bc-divider"></div>
+          <div class="bc-chip">
+            <span class="bc-chip-label">Past Balance</span>
+            <span class="bc-chip-value orange">{{ formatCurrency(balance.pastBalance) }}</span>
+          </div>
+          <div class="bc-divider"></div>
+          <div class="bc-chip">
+            <span class="bc-chip-label">Late Fees</span>
+            <span class="bc-chip-value" [class.red]="balance.lateFees > 0">
+              {{ formatCurrency(balance.lateFees) }}
+            </span>
+          </div>
         </div>
       </div>
+
       <div class="balance-right">
-        <div class="autopay-pill"><div class="ap-dot"></div>AutoPay: {{ balance.autoPay ? 'ON' : 'OFF' }}</div>
+        <div class="autopay-pill">
+          <div class="ap-dot"></div>
+          AutoPay: {{ balance.autoPay ? 'ON' : 'OFF' }}
+        </div>
         <button class="btn-pay" [routerLink]="['/payment']">Pay Now →</button>
       </div>
+
     </div>
   </div>
 
-  <!-- Quick Actions -->
+  <!-- ── Quick Actions ─────────────────────────────────────────────────── -->
   <div class="section-header animate delay-1">
     <span class="section-title">Quick Actions</span>
   </div>
 
   <div class="quick-grid animate delay-1">
-    <div class="quick-card" *ngFor="let action of quickActions" [routerLink]="[action.route]">
-      <!-- Colored icon box -->
-      <div class="quick-icon" [ngClass]="action.colorClass">
-        <span [innerHTML]="getIcon(action.icon)"></span>
+
+    <!-- Make a Payment -->
+    <div class="quick-card" [routerLink]="['/payment']">
+      <div class="quick-icon ic-purple">
+        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="none"
+             viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="2" y="5" width="20" height="14" rx="2"/>
+          <line x1="2" y1="10" x2="22" y2="10"/>
+        </svg>
       </div>
-      <!-- Label below icon -->
       <div class="quick-label">
-        <div class="quick-title">{{ action.label }}</div>
-        <div class="quick-desc">{{ action.desc }}</div>
+        <div class="quick-title">Make a Payment</div>
+        <div class="quick-desc">Pay securely via ACH or card</div>
       </div>
     </div>
+
+    <!-- E-Billing & History -->
+    <div class="quick-card" [routerLink]="['/billing']">
+      <div class="quick-icon ic-teal">
+        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="none"
+             viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/>
+          <polyline points="14 2 14 8 20 8"/>
+          <line x1="16" y1="13" x2="8" y2="13"/>
+          <line x1="16" y1="17" x2="8" y2="17"/>
+          <polyline points="10 9 9 9 8 9"/>
+        </svg>
+      </div>
+      <div class="quick-label">
+        <div class="quick-title">E-Billing &amp; History</div>
+        <div class="quick-desc">Statements &amp; past transactions</div>
+      </div>
+    </div>
+
+    <!-- My Account -->
+    <div class="quick-card" [routerLink]="['/account']">
+      <div class="quick-icon ic-navy">
+        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="none"
+             viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/>
+          <circle cx="12" cy="7" r="4"/>
+        </svg>
+      </div>
+      <div class="quick-label">
+        <div class="quick-title">My Account</div>
+        <div class="quick-desc">Update info &amp; preferences</div>
+      </div>
+    </div>
+
+    <!-- Maintenance -->
+    <div class="quick-card" [routerLink]="['/maintenance']">
+      <div class="quick-icon ic-green">
+        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="none"
+             viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z"/>
+        </svg>
+      </div>
+      <div class="quick-label">
+        <div class="quick-title">Maintenance</div>
+        <div class="quick-desc">Submit &amp; track service requests</div>
+      </div>
+    </div>
+
+    <!-- Documents -->
+    <div class="quick-card" [routerLink]="['/documents']">
+      <div class="quick-icon ic-red">
+        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="none"
+             viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M13 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V9z"/>
+          <polyline points="13 2 13 9 20 9"/>
+        </svg>
+      </div>
+      <div class="quick-label">
+        <div class="quick-title">Documents</div>
+        <div class="quick-desc">Lease &amp; community documents</div>
+      </div>
+    </div>
+
+    <!-- Contact Office -->
+    <div class="quick-card" [routerLink]="['/contact']">
+      <div class="quick-icon ic-gold">
+        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="none"
+             viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16.92z"/>
+        </svg>
+      </div>
+      <div class="quick-label">
+        <div class="quick-title">Contact Office</div>
+        <div class="quick-desc">Reach your community manager</div>
+      </div>
+    </div>
+
   </div>
 
-  <!-- Bottom grid: Transactions + Notices -->
+  <!-- ── Bottom Grid: Transactions + Notices ───────────────────────────── -->
   <div class="bottom-grid animate delay-2">
 
+    <!-- Recent Transactions -->
     <div class="card">
       <div class="section-header">
         <span class="section-title">Recent Transactions</span>
@@ -53,18 +164,37 @@
       </div>
       <div class="tx-list">
         <div class="tx-item" *ngFor="let tx of transactions">
-          <div class="tx-icon">{{ tx.status === 'paid' ? '💳' : '🧾' }}</div>
+
+          <div class="tx-icon" *ngIf="tx.status === 'paid'">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none"
+                 viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="2" y="5" width="20" height="14" rx="2"/>
+              <line x1="2" y1="10" x2="22" y2="10"/>
+            </svg>
+          </div>
+
+          <div class="tx-icon pending" *ngIf="tx.status !== 'paid'">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none"
+                 viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"/>
+              <polyline points="12 6 12 12 16 14"/>
+            </svg>
+          </div>
+
           <div class="tx-info">
             <div class="tx-name">{{ tx.description }}</div>
             <div class="tx-date">{{ tx.date }}</div>
           </div>
-          <div class="tx-amount" [class.paid]="tx.status === 'paid'">
-            {{ tx.status === 'paid' ? '-' + formatCurrency(tx.amount) : 'Pending' }}
+          <div class="tx-amount"
+               [class.paid]="tx.status === 'paid'"
+               [class.pending]="tx.status !== 'paid'">
+            {{ tx.status === 'paid' ? '−' + formatCurrency(tx.amount) : 'Pending' }}
           </div>
         </div>
       </div>
     </div>
 
+    <!-- Community Notices -->
     <div class="card">
       <div class="section-header">
         <span class="section-title">Community Notices</span>

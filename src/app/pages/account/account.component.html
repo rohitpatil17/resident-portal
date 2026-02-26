@@ -17,3 +17,193 @@
     </div>
   </div>
 </div>
+
+<!-- ══════════════════════════════════════════════════════════
+     LOGIN INFORMATION MODAL
+══════════════════════════════════════════════════════════ -->
+<div class="modal-overlay" *ngIf="showLoginModal" (click)="closeLoginModal()">
+  <div class="modal-panel animate" (click)="$event.stopPropagation()">
+    <h2 class="modal-title">Update your login information</h2>
+
+    <div class="field-group">
+      <label class="field-label">Your username</label>
+      <input class="field-input field-static" type="text" [value]="loginForm.username" readonly />
+    </div>
+
+    <div class="field-group">
+      <label class="field-label">Your email address</label>
+      <input class="field-input field-static" type="email" [value]="loginForm.email" readonly />
+    </div>
+
+    <div class="field-group">
+      <label class="field-label">Your current password</label>
+      <input class="field-input field-active" type="password" [(ngModel)]="loginForm.currentPassword" />
+    </div>
+
+    <div class="field-group">
+      <label class="field-label">Your new password</label>
+      <input class="field-input" type="password" placeholder="new password" [(ngModel)]="loginForm.newPassword" />
+    </div>
+
+    <div class="field-group">
+      <label class="field-label">Verify new password</label>
+      <input class="field-input" type="password" placeholder="verify new password" [(ngModel)]="loginForm.verifyPassword" />
+    </div>
+
+    <div class="policy-box">
+      <div class="policy-title">Password Policy</div>
+      <div class="policy-text">Your new password must contain:</div>
+      <div class="policy-text">At least 8 characters</div>
+      <div class="policy-text">One numeric character</div>
+      <div class="policy-text">One symbol character (e.g., ! &#64; # $ % ^ &amp; * ( ) + = )</div>
+    </div>
+
+    <div class="modal-error"   *ngIf="loginError">{{ loginError }}</div>
+    <div class="modal-success" *ngIf="loginSuccess">{{ loginSuccess }}</div>
+
+    <div class="modal-actions">
+      <button class="btn-cancel" (click)="closeLoginModal()">Cancel</button>
+      <button class="btn-save"   (click)="saveLoginChanges()">Save Changes</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════
+     PAYMENT ACCOUNTS — MENU
+══════════════════════════════════════════════════════════ -->
+<div class="modal-overlay" *ngIf="paymentView === 'menu'" (click)="closePaymentModal()">
+  <div class="modal-panel payment-menu animate" (click)="$event.stopPropagation()">
+    <h2 class="modal-title payment-h">Payment Accounts</h2>
+
+    <button class="pay-btn pay-btn--solid" (click)="goToBank()">Add Bank Account</button>
+    <button class="pay-btn pay-btn--solid" (click)="goToCard()">Add Credit Card Account</button>
+    <button class="pay-btn pay-btn--outline" (click)="closePaymentModal()">Cancel</button>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════
+     PAYMENT ACCOUNTS — ADD BANK ACCOUNT
+══════════════════════════════════════════════════════════ -->
+<div class="modal-overlay" *ngIf="paymentView === 'bank'" (click)="closePaymentModal()">
+  <div class="modal-panel animate" (click)="$event.stopPropagation()">
+    <h2 class="modal-title payment-h">Add Bank Account</h2>
+
+    <!-- Account type -->
+    <div class="field-group">
+      <label class="field-label">Account type</label>
+      <div class="select-wrapper">
+        <select class="field-select" [(ngModel)]="bankForm.accountType">
+          <option value="" disabled selected>Select account type</option>
+          <option *ngFor="let t of accountTypes" [value]="t">{{ t }}</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Name on bank account -->
+    <div class="field-group">
+      <label class="field-label">
+        Name on bank account
+        <span class="field-link">(What is this?)</span>
+      </label>
+      <input class="field-input" type="text" [(ngModel)]="bankForm.name" />
+    </div>
+
+    <!-- Routing number -->
+    <div class="field-group">
+      <label class="field-label">
+        Routing number
+        <span class="field-link">(Where can I find this?)</span>
+      </label>
+      <input class="field-input field-box" type="text" maxlength="9"
+             [(ngModel)]="bankForm.routing" placeholder="" />
+    </div>
+
+    <!-- Account number -->
+    <div class="field-group">
+      <label class="field-label">
+        Account number
+        <span class="field-link">(Where can I find this?)</span>
+      </label>
+      <input class="field-input" type="text" [(ngModel)]="bankForm.account" />
+    </div>
+
+    <!-- Re-enter account number -->
+    <div class="field-group">
+      <label class="field-label">Re-enter account number</label>
+      <input class="field-input" type="text" [(ngModel)]="bankForm.reAccount" />
+    </div>
+
+    <p class="note-text">
+      Note: the routing and account numbers may not be the same as the numbers on your check
+      or deposit ticket. Confirm with your banker for the correct routing and account numbers
+      for online ACH payments.
+    </p>
+
+    <div class="modal-error"   *ngIf="bankError">{{ bankError }}</div>
+    <div class="modal-success" *ngIf="bankSuccess">{{ bankSuccess }}</div>
+
+    <button class="pay-btn pay-btn--solid" (click)="saveBankAccount()">Save and Continue</button>
+    <button class="pay-btn pay-btn--outline" (click)="openPaymentMenu()">Cancel</button>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════
+     PAYMENT ACCOUNTS — ADD CREDIT CARD
+══════════════════════════════════════════════════════════ -->
+<div class="modal-overlay" *ngIf="paymentView === 'card'" (click)="closePaymentModal()">
+  <div class="modal-panel animate" (click)="$event.stopPropagation()">
+    <h2 class="modal-title payment-h">Add Credit Card</h2>
+
+    <!-- Cardholder Name -->
+    <div class="field-group">
+      <label class="field-label">Cardholder Name</label>
+      <input class="field-input" type="text" [(ngModel)]="cardForm.cardholderName" />
+    </div>
+
+    <!-- Card Number -->
+    <div class="field-group">
+      <label class="field-label">Card Number</label>
+      <input class="field-input" type="text" maxlength="19" [(ngModel)]="cardForm.cardNumber" />
+    </div>
+
+    <!-- Re-enter Card Number -->
+    <div class="field-group">
+      <label class="field-label">Re-enter Card Number</label>
+      <input class="field-input" type="text" maxlength="19" [(ngModel)]="cardForm.reCardNumber" />
+    </div>
+
+    <!-- Expiration Month -->
+    <div class="field-group">
+      <label class="field-label">Expiration Month</label>
+      <div class="select-wrapper">
+        <select class="field-select field-select--line" [(ngModel)]="cardForm.expirationMonth">
+          <option value="" disabled selected></option>
+          <option *ngFor="let m of months" [value]="m">{{ m }}</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Expiration Year -->
+    <div class="field-group">
+      <label class="field-label">Expiration Year</label>
+      <div class="select-wrapper">
+        <select class="field-select field-select--line" [(ngModel)]="cardForm.expirationYear">
+          <option value="" disabled selected></option>
+          <option *ngFor="let y of years" [value]="y">{{ y }}</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- CVV -->
+    <div class="field-group">
+      <label class="field-label">CVV/Security Code</label>
+      <input class="field-input" type="text" maxlength="4" [(ngModel)]="cardForm.cvv" />
+    </div>
+
+    <div class="modal-error"   *ngIf="cardError">{{ cardError }}</div>
+    <div class="modal-success" *ngIf="cardSuccess">{{ cardSuccess }}</div>
+
+    <button class="pay-btn pay-btn--solid"   (click)="saveCreditCard()">Save and Continue</button>
+    <button class="pay-btn pay-btn--outline" (click)="openPaymentMenu()">Cancel</button>
+  </div>
+</div>

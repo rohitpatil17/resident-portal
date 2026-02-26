@@ -3,7 +3,7 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { AuthService } from '../../core/services/auth.service';
 import { LogoComponent } from '../../shared/components/logo/logo.component';
 
@@ -15,13 +15,20 @@ import { LogoComponent } from '../../shared/components/logo/logo.component';
   styleUrls: ['./login.component.scss']
 })
 export class LoginComponent {
-  username = '';
-  password = '';
+  username     = '';
+  password     = '';
   showPassword = false;
   errorMessage = '';
-  isLoading = false;
+  isLoading    = false;
 
-  constructor(private auth: AuthService, private router: Router) {}
+  // Auto-updates every year — no manual change needed
+  readonly currentYear = new Date().getFullYear();
+
+  constructor(
+    private auth:  AuthService,
+    private router: Router,
+    private route:  ActivatedRoute     // ← added for returnUrl support
+  ) {}
 
   togglePassword(): void {
     this.showPassword = !this.showPassword;
@@ -29,16 +36,22 @@ export class LoginComponent {
 
   onLogin(): void {
     this.errorMessage = '';
+
     if (!this.username || !this.password) {
       this.errorMessage = 'Please enter your username and password.';
       return;
     }
+
     this.isLoading = true;
+
     setTimeout(() => {
       const success = this.auth.login(this.username, this.password);
       this.isLoading = false;
+
       if (success) {
-        this.router.navigate(['/dashboard']);
+        // Return to the page they refreshed on, or fall back to /dashboard
+        const returnUrl = this.route.snapshot.queryParamMap.get('returnUrl') ?? '/dashboard';
+        this.router.navigateByUrl(returnUrl);
       } else {
         this.errorMessage = 'Invalid credentials. Please try again.';
       }
@@ -47,6 +60,7 @@ export class LoginComponent {
 
   onRhpLogin(): void {
     this.auth.login('rhp-user', 'rhp-pass');
-    this.router.navigate(['/dashboard']);
+    const returnUrl = this.route.snapshot.queryParamMap.get('returnUrl') ?? '/dashboard';
+    this.router.navigateByUrl(returnUrl);
   }
 }

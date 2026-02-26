@@ -1,6 +1,6 @@
 // src/app/shared/components/sidebar/sidebar.component.ts
 
-import { Component, Output, EventEmitter } from '@angular/core';
+import { Component, Output, EventEmitter, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, RouterLinkActive } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
@@ -20,15 +20,17 @@ export interface NavItem {
   styleUrls: ['./sidebar.component.scss']
 })
 export class SidebarComponent {
-  @Output() closeSidebar = new EventEmitter<void>();
+  @Input()  isOpen        = false;   // controlled by parent via [isOpen]
+  @Input()  hasDueBalance = false;   // parent passes true when totalDue > 0
+  @Output() closeSidebar  = new EventEmitter<void>();
 
   resident$ = this.auth.currentUser$;
 
   mainNav: NavItem[] = [
-    { label: 'Dashboard',           route: '/dashboard', icon: 'grid' },
-    { label: 'Make a Payment',      route: '/payment',   icon: 'card',  badge: 'Due' },
+    { label: 'Dashboard',           route: '/dashboard', icon: 'grid'  },
+    { label: 'Make a Payment',      route: '/payment',   icon: 'card'  },
     { label: 'E-Billing & History', route: '/billing',   icon: 'clock' },
-    { label: 'My Account',          route: '/account',   icon: 'user' },
+    { label: 'My Account',          route: '/account',   icon: 'user'  },
   ];
 
   resourceNav: NavItem[] = [

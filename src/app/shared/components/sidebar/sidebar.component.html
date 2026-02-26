@@ -1,17 +1,30 @@
 <!-- src/app/shared/components/sidebar/sidebar.component.html -->
 
-<aside class="sidebar">
+<aside class="sidebar" [class.open]="isOpen">
 
   <!-- Mobile close button -->
   <button class="mobile-close" (click)="close()">
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-      <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
+         stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <line x1="18" y1="6" x2="6" y2="18"/>
+      <line x1="6"  y1="6" x2="18" y2="18"/>
     </svg>
   </button>
 
-  <!-- Logo — real ManageAmerica image (white version) -->
+  <!-- Logo — CSS recreation of RHP Resident Connect -->
   <div class="sidebar-logo">
-    <img class="logo-img" src="assets/manage-america-logo-white.png" alt="ManageAmerica">
+    <div class="rhp-logo">
+      <!-- Blue circle with italic rhp -->
+      <div class="rhp-badge">rhp</div>
+      <!-- Right side: wordmark + tagline -->
+      <div class="rhp-wordmark">
+        <div class="rhp-title">
+          <span class="rhp-resident">RESIDENT</span>
+          <span class="rhp-connect">connect</span>
+        </div>
+        <div class="rhp-tagline">live life. live it here.<sup>®</sup></div>
+      </div>
+    </div>
   </div>
 
   <!-- User info -->
@@ -19,43 +32,107 @@
     <div class="user-avatar">{{ resident.name.charAt(0) }}</div>
     <div class="user-info">
       <div class="user-name">{{ resident.name }}</div>
-      <div class="user-unit">{{ resident.unit }} {{ resident.community }}</div>
+      <div class="user-role">
+        <span class="user-role-dot"></span>
+        {{ resident.unit }} {{ resident.community }}
+      </div>
     </div>
   </div>
 
-  <!-- Main navigation -->
+  <!-- Navigation -->
   <nav class="sidebar-nav">
+
     <div class="nav-section-label">Main</div>
 
-    <a
-      *ngFor="let item of mainNav"
-      class="nav-item"
-      [routerLink]="item.route"
-      routerLinkActive="active"
-      (click)="close()">
-      <span class="nav-icon" [innerHTML]="getIcon(item.icon)"></span>
-      {{ item.label }}
-      <span *ngIf="item.badge" class="nav-badge">{{ item.badge }}</span>
+    <!-- Dashboard -->
+    <a class="nav-item" routerLink="/dashboard" routerLinkActive="active" (click)="close()">
+      <span class="nav-icon">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
+             stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3"  y="3"  width="7" height="7" rx="1"/>
+          <rect x="14" y="3"  width="7" height="7" rx="1"/>
+          <rect x="3"  y="14" width="7" height="7" rx="1"/>
+          <rect x="14" y="14" width="7" height="7" rx="1"/>
+        </svg>
+      </span>
+      <span class="nav-label">Dashboard</span>
+    </a>
+
+    <!-- Make a Payment -->
+    <a class="nav-item" routerLink="/payment" routerLinkActive="active" (click)="close()">
+      <span class="nav-icon">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
+             stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="2" y="5" width="20" height="14" rx="2"/>
+          <line x1="2" y1="10" x2="22" y2="10"/>
+        </svg>
+      </span>
+      <span class="nav-label">Make a Payment</span>
+      <span class="nav-badge red" *ngIf="hasDueBalance">Due</span>
+    </a>
+
+    <!-- E-Billing & History -->
+    <a class="nav-item" routerLink="/billing" routerLinkActive="active" (click)="close()">
+      <span class="nav-icon">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
+             stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/>
+          <polyline points="14 2 14 8 20 8"/>
+          <line x1="16" y1="13" x2="8" y2="13"/>
+          <line x1="16" y1="17" x2="8" y2="17"/>
+          <polyline points="10 9 9 9 8 9"/>
+        </svg>
+      </span>
+      <span class="nav-label">E-Billing &amp; History</span>
+    </a>
+
+    <!-- My Account -->
+    <a class="nav-item" routerLink="/account" routerLinkActive="active" (click)="close()">
+      <span class="nav-icon">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
+             stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/>
+          <circle cx="12" cy="7" r="4"/>
+        </svg>
+      </span>
+      <span class="nav-label">My Account</span>
     </a>
 
     <div class="nav-section-label">Resources</div>
 
-    <a
-      *ngFor="let item of resourceNav"
-      class="nav-item"
-      [routerLink]="item.route"
-      routerLinkActive="active"
-      (click)="close()">
-      <span class="nav-icon" [innerHTML]="getIcon(item.icon)"></span>
-      {{ item.label }}
+    <!-- Documents -->
+    <a class="nav-item" routerLink="/documents" routerLinkActive="active" (click)="close()">
+      <span class="nav-icon">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
+             stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M13 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V9z"/>
+          <polyline points="13 2 13 9 20 9"/>
+        </svg>
+      </span>
+      <span class="nav-label">Documents</span>
     </a>
+
+    <!-- FAQ -->
+    <a class="nav-item" routerLink="/faq" routerLinkActive="active" (click)="close()">
+      <span class="nav-icon">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
+             stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"/>
+          <path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3"/>
+          <line x1="12" y1="17" x2="12.01" y2="17"/>
+        </svg>
+      </span>
+      <span class="nav-label">FAQ</span>
+    </a>
+
   </nav>
 
-  <!-- Logout -->
+  <!-- Footer / Logout -->
   <div class="sidebar-footer">
     <button class="logout-btn" (click)="logout()">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+           stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/>
         <polyline points="16 17 21 12 16 7"/>
         <line x1="21" y1="12" x2="9" y2="12"/>
       </svg>

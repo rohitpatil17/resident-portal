@@ -5,20 +5,27 @@ import { Router } from '@angular/router';
 import { BehaviorSubject } from 'rxjs';
 import { Resident } from '../models/resident.model';
 
+const SESSION_KEY = 'ma_session';
+
 @Injectable({ providedIn: 'root' })
 export class AuthService {
-  private currentUserSubject = new BehaviorSubject<Resident | null>(null);
-  currentUser$ = this.currentUserSubject.asObservable();
+
 
   // Mock resident data
   private mockResident: Resident = {
-    id: 'R-0029',
-    name: 'Tony',
-    unit: '#29',
+    id:        'R-0029',
+    name:      'Tony',
+    unit:      '#29',
     community: 'Apple Meadow',
-    email: 'tony@email.com',
-    phone: '(555) 123-4567'
+    email:     'tony@email.com',
+    phone:     '(555) 123-4567'
   };
+
+  // ── Rehydrate from localStorage on construction so refresh works ──────────
+  private currentUserSubject = new BehaviorSubject<Resident | null>(
+    this.loadSession()
+  );
+  currentUser$ = this.currentUserSubject.asObservable();
 
   constructor(private router: Router) {}
 
@@ -31,8 +38,9 @@ export class AuthService {
   }
 
   login(username: string, password: string): boolean {
-    // Mock auth — accept any non-empty credentials
     if (username && password) {
+      // persist so page refresh doesn't log the user out
+      localStorage.setItem(SESSION_KEY, JSON.stringify(this.mockResident));
       this.currentUserSubject.next(this.mockResident);
       return true;
     }
@@ -40,7 +48,18 @@ export class AuthService {
   }
 
   logout(): void {
+    localStorage.removeItem(SESSION_KEY);
     this.currentUserSubject.next(null);
     this.router.navigate(['/login']);
+  }
+
+  // ── Private ───────────────────────────────────────────────────────────────
+  private loadSession(): Resident | null {
+    try {
+      const raw = localStorage.getItem(SESSION_KEY);
+      return raw ? (JSON.parse(raw) as Resident) : null;
+    } catch {
+      return null;
+    }
   }
 }

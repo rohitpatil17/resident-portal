@@ -1,32 +1,57 @@
-// ─── ManageAmerica Design Tokens ───────────────────────────────────────────
+/* ─── ManageAmerica Design Tokens ─────────────────────────────────────────── */
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700;800&family=Playfair+Display:wght@600;700&display=swap');
+
 :root {
-  --navy:         #1a2340;
-  --navy-mid:     #1e2d52;
-  --navy-light:   #243460;
-  --purple:       #7B7FC4;
-  --purple-light: #A5A8D8;
-  --purple-bg:    #EEEEF8;
-  --teal:         #00B4C6;
-  --teal-light:   #E0F7FA;
-  --accent:       #E8343A;
-  --gold:         #F4B942;
-  --success:      #10B981;
+  /* ── Core Brand — #5653A1 Indigo-Violet ─────────────────────────────────── */
+  --primary:         #5653A1;                    /* base brand color             */
+  --primary-light:   #7B79C4;                    /* hover / lighter text         */
+  --primary-lighter: #A8A6DB;                    /* subtle text on dark bg       */
+  --primary-dark:    #3E3C7E;                    /* pressed / depth              */
+  --primary-bg:      rgba(86, 83, 161, 0.10);   /* icon chip / soft fills       */
+  --primary-dim:     rgba(86, 83, 161, 0.22);   /* sidebar active, borders      */
+  --primary-glow:    rgba(86, 83, 161, 0.40);   /* shadows / glows              */
 
-  --white:        #FFFFFF;
-  --gray-50:      #F7F8FC;
-  --gray-100:     #F0F2F8;
-  --gray-200:     #E2E6F0;
-  --gray-400:     #94A3B8;
-  --gray-600:     #475569;
-  --gray-800:     #1E293B;
+  /* ── Violet / Purple Palette (replaces navy) ────────────────────────────── */
+  --navy:        #3E3C7E;   /* darkest  — sidebar bg, deep fills   */
+  --navy-mid:    #5653A1;   /* mid      — gradients, depth layers  */
+  --navy-light:  #7B79C4;   /* lightest — active states, highlights */
 
-  --shadow-sm:  0 1px 4px rgba(26,35,64,0.08);
-  --shadow-md:  0 4px 24px rgba(26,35,64,0.12);
-  --shadow-lg:  0 16px 48px rgba(26,35,64,0.18);
-  --radius:     16px;
+  /* ── Legacy aliases ─────────────────────────────────────────────────────── */
+  --purple:         var(--primary);
+  --purple-light:   var(--primary-light);
+  --purple-bg:      var(--primary-bg);
+  --purple-glow:    var(--primary-glow);
+  --purple-dim:     var(--primary-dim);
+
+  /* ── Supporting Palette ─────────────────────────────────────────────────── */
+  /* Complementary teal (split-complement of #5653A1) */
+  --teal:           #00B89C;
+  --teal-light:     #E0F7F4;
+  /* Accent: warm coral-red (triadic contrast) */
+  --accent:         #E8453A;
+  /* Gold: analogous warm highlight */
+  --gold:           #F4A942;
+  --success:        #10B981;
+
+  /* ── Neutrals ────────────────────────────────────────────────────────────── */
+  --white:          #FFFFFF;
+  --gray-50:        #F6F6FC;   /* very slight violet tint */
+  --gray-100:       #EEEEF6;
+  --gray-200:       #DCDCEA;
+  --gray-400:       #9494B8;
+  --gray-600:       #52527A;
+  --gray-800:       #1E1E35;
+
+  /* ── Shadows (keyed to #5653A1) ─────────────────────────────────────────── */
+  --shadow-sm:      0 1px 4px  rgba(62, 60, 126, 0.08);
+  --shadow-md:      0 4px 24px rgba(62, 60, 126, 0.14);
+  --shadow-lg:      0 16px 48px rgba(62, 60, 126, 0.20);
+  --shadow-primary: 0 6px 24px rgba(86, 83, 161, 0.40);
+
+  --radius: 16px;
 }
 
-// ─── Reset ─────────────────────────────────────────────────────────────────
+/* ─── Reset ──────────────────────────────────────────────────────────────── */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 html, body {
@@ -36,34 +61,43 @@ html, body {
   color: var(--gray-800);
 }
 
-// ─── Typography ────────────────────────────────────────────────────────────
-@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700;800&family=Playfair+Display:wght@600;700&display=swap');
-
+/* ─── Typography ─────────────────────────────────────────────────────────── */
 h1, h2, h3, h4, h5 { letter-spacing: -0.3px; }
 
-// ─── Animations ────────────────────────────────────────────────────────────
+/* ─── Animations ─────────────────────────────────────────────────────────── */
 @keyframes fadeUp {
   from { opacity: 0; transform: translateY(16px); }
   to   { opacity: 1; transform: translateY(0); }
 }
 
-.animate      { animation: fadeUp 0.35s ease forwards; }
-.delay-1      { animation-delay: 0.08s; opacity: 0; }
-.delay-2      { animation-delay: 0.16s; opacity: 0; }
-.delay-3      { animation-delay: 0.24s; opacity: 0; }
-.delay-4      { animation-delay: 0.32s; opacity: 0; }
+@keyframes shimmer {
+  0%   { background-position: -400px 0; }
+  100% { background-position:  400px 0; }
+}
 
-// ─── Shared Card ───────────────────────────────────────────────────────────
+.animate  { animation: fadeUp 0.35s ease forwards; }
+.delay-1  { animation-delay: 0.08s; opacity: 0; }
+.delay-2  { animation-delay: 0.16s; opacity: 0; }
+.delay-3  { animation-delay: 0.24s; opacity: 0; }
+.delay-4  { animation-delay: 0.32s; opacity: 0; }
+
+/* ─── Shared Card ────────────────────────────────────────────────────────── */
 .card {
   background: var(--white);
   border-radius: var(--radius);
   padding: 22px;
   box-shadow: var(--shadow-sm);
+  border: 1px solid var(--gray-100);
+  transition: box-shadow .2s, border-color .2s;
+}
+.card:hover {
+  box-shadow: var(--shadow-md);
+  border-color: var(--gray-200);
 }
 
-// ─── Shared Buttons ────────────────────────────────────────────────────────
+/* ─── Buttons ────────────────────────────────────────────────────────────── */
 .btn-primary {
-  background: linear-gradient(135deg, var(--navy), var(--navy-light));
+  background: linear-gradient(135deg, var(--navy-light) 0%, var(--navy) 100%);
   color: var(--white);
   border: none;
   border-radius: 12px;
@@ -71,28 +105,44 @@ h1, h2, h3, h4, h5 { letter-spacing: -0.3px; }
   font-size: 15px;
   font-weight: 700;
   cursor: pointer;
-  transition: transform 0.15s, box-shadow 0.15s;
-  box-shadow: 0 4px 16px rgba(26,35,64,0.25);
-
-  &:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 8px 24px rgba(26,35,64,0.3);
-  }
+  transition: transform .18s, box-shadow .18s;
+  box-shadow: var(--shadow-primary);
+  letter-spacing: .2px;
 }
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 30px rgba(86, 83, 161, 0.50);
+}
+.btn-primary:active { transform: translateY(0); }
 
 .btn-purple {
-  background: var(--purple);
+  background: linear-gradient(135deg, var(--navy-mid) 0%, var(--navy) 100%);
   color: var(--white);
   border: none;
   border-radius: 12px;
   font-family: 'DM Sans', sans-serif;
   font-weight: 700;
   cursor: pointer;
-  transition: all 0.2s;
-  box-shadow: 0 4px 16px rgba(123,127,196,0.4);
-
-  &:hover { background: #6A6EB8; transform: translateY(-1px); }
+  transition: all .2s;
+  box-shadow: var(--shadow-primary);
+  position: relative;
+  overflow: hidden;
 }
+.btn-purple::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 45%;
+  background: linear-gradient(to bottom, rgba(255,255,255,.15), transparent);
+  border-radius: inherit;
+  pointer-events: none;
+}
+.btn-purple:hover {
+  background: linear-gradient(135deg, var(--navy-light) 0%, var(--navy-mid) 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 32px rgba(86, 83, 161, 0.52);
+}
+.btn-purple:active { transform: translateY(0); }
 
 .btn-outline {
   background: var(--white);
@@ -103,29 +153,56 @@ h1, h2, h3, h4, h5 { letter-spacing: -0.3px; }
   font-weight: 600;
   color: var(--navy);
   cursor: pointer;
-  transition: all 0.18s;
-
-  &:hover { border-color: var(--purple); color: var(--purple); background: var(--purple-bg); }
+  transition: all .18s;
+}
+.btn-outline:hover {
+  border-color: var(--navy-light);
+  color: var(--navy-light);
+  background: var(--primary-bg);
+  box-shadow: 0 0 0 3px rgba(86, 83, 161, 0.12);
 }
 
-// ─── Section header ────────────────────────────────────────────────────────
+/* ─── Focus Ring (accessibility) ─────────────────────────────────────────── */
+:focus-visible {
+  outline: 2.5px solid var(--navy-light);
+  outline-offset: 3px;
+  border-radius: 6px;
+}
+
+/* ─── Section Header ─────────────────────────────────────────────────────── */
 .section-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 13px;
-
-  .section-title {
-    font-size: 15px;
-    font-weight: 700;
-    color: var(--navy);
-  }
-
-  .section-link {
-    font-size: 12px;
-    color: var(--purple);
-    font-weight: 600;
-    cursor: pointer;
-    text-decoration: none;
-  }
+  margin-bottom: 14px;
 }
+.section-header .section-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--navy);
+  letter-spacing: -.2px;
+}
+.section-header .section-link {
+  font-size: 12px;
+  color: var(--navy-light);
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: none;
+  transition: color .15s, gap .15s;
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+}
+.section-header .section-link:hover {
+  color: var(--navy-mid);
+  gap: 5px;
+}
+
+/* ─── Scrollbar ──────────────────────────────────────────────────────────── */
+::-webkit-scrollbar { width: 4px; height: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb {
+  background: var(--primary-dim);
+  border-radius: 10px;
+}
+::-webkit-scrollbar-thumb:hover { background: var(--navy-light); }

@@ -1,32 +1,279 @@
 // src/app/pages/account/account.component.scss
 
+// ── Account List ─────────────────────────────────────────────────────────────
 .account-row {
-  display: flex; align-items: center; justify-content: space-between;
-  padding: 17px 0; border-bottom: 1px solid var(--gray-100);
-  gap: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 17px 0;
+  border-bottom: 1px solid var(--gray-100);
   &:last-child { border-bottom: none; }
 }
 
 .row-title { font-size: 14px; font-weight: 700; color: var(--purple); }
-.row-desc  { font-size: 12px; color: var(--gray-400); margin-top: 3px; line-height: 1.5; }
+.row-desc  { font-size: 12px; color: var(--gray-400); margin-top: 3px; }
 
 .btn-view {
-  padding: 7px 19px; border-radius: 9px;
-  border: 1.5px solid var(--gray-200); background: white;
-  font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 600;
-  color: var(--navy); cursor: pointer; transition: all .18s; white-space: nowrap; flex-shrink: 0;
-  &:hover:not(.disabled) { border-color: var(--purple); color: var(--purple); background: var(--purple-bg); }
-  &.disabled { opacity: .35; cursor: not-allowed; }
+  padding: 7px 19px;
+  border-radius: 9px;
+  border: 1.5px solid var(--gray-200);
+  background: var(--white);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px; font-weight: 600;
+  color: var(--navy); cursor: pointer; transition: all .18s;
+
+  &:hover:not(.disabled) {
+    border-color: var(--purple); color: var(--purple); background: var(--purple-bg);
+  }
+  &.disabled { opacity: 0.35; cursor: not-allowed; }
 }
 
-// ── RESPONSIVE ──────────────────────────────────────────────────────────────
-@media (max-width: 768px) {
-  .account-row { padding: 14px 0; }
-  .row-title   { font-size: 13px; }
-  .btn-view    { padding: 6px 14px; font-size: 12px; }
+// ── Modal Shell ───────────────────────────────────────────────────────────────
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(26, 35, 64, 0.48);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 16px;
 }
 
-@media (max-width: 480px) {
-  .account-row { flex-wrap: wrap; gap: 10px; }
-  .btn-view    { width: 100%; text-align: center; }
+.modal-panel {
+  background: var(--white);
+  border-radius: var(--radius);
+  padding: 36px 32px 28px;
+  width: 100%;
+  max-width: 520px;
+  box-shadow: var(--shadow-lg);
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+// Payment menu — slightly wider card, centred layout
+.payment-menu {
+  max-width: 480px;
+  padding: 40px 36px 32px;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+
+// ── Headings ──────────────────────────────────────────────────────────────────
+.modal-title {
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--navy);
+  margin-bottom: 24px;
+}
+
+.payment-h {
+  font-size: 26px;
+  font-weight: 900;
+  letter-spacing: -0.5px;
+  margin-bottom: 28px;
+}
+
+// ── Shared Payment Buttons ────────────────────────────────────────────────────
+.pay-btn {
+  display: block;
+  width: 100%;
+  padding: 16px;
+  margin-bottom: 14px;
+  border-radius: 6px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.18s;
+  text-align: center;
+
+  &:last-child { margin-bottom: 0; }
+
+  &--solid {
+    background: var(--navy);
+    color: var(--white);
+    border: none;
+
+    &:hover { background: var(--navy-light); }
+  }
+
+  &--outline {
+    background: var(--white);
+    color: var(--purple);
+    border: 1.5px solid var(--gray-200);
+
+    &:hover { border-color: var(--purple); }
+  }
+}
+
+// ── Form Fields ───────────────────────────────────────────────────────────────
+.field-group { margin-bottom: 20px; }
+
+.field-label {
+  display: block;
+  font-size: 13px;
+  color: var(--gray-600);
+  margin-bottom: 6px;
+}
+
+.field-link {
+  color: var(--navy);
+  font-size: 12px;
+  margin-left: 4px;
+  cursor: pointer;
+  &:hover { text-decoration: underline; }
+}
+
+.field-input {
+  width: 100%;
+  border: none;
+  border-bottom: 1.5px solid var(--gray-200);
+  padding: 7px 0;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px;
+  color: var(--navy);
+  outline: none;
+  background: transparent;
+  transition: border-color 0.2s;
+
+  &::placeholder { color: var(--gray-400); font-size: 13px; }
+  &:focus { border-bottom-color: var(--navy); }
+}
+
+// Routing number — box style
+.field-box {
+  border: 1.5px solid var(--gray-200);
+  border-radius: 6px;
+  padding: 10px 12px;
+  width: 100%;
+
+  &:focus { border-color: var(--navy); outline: none; }
+}
+
+// Static / pre-filled style (login modal)
+.field-static { color: var(--purple); cursor: default; }
+
+// Highlighted current-password
+.field-active {
+  background: var(--purple-bg);
+  padding: 8px 10px;
+  border-radius: 8px;
+  border: 1.5px solid var(--gray-200);
+}
+
+// ── Select Dropdowns ──────────────────────────────────────────────────────────
+.select-wrapper {
+  position: relative;
+
+  &::after {
+    content: '▼';
+    position: absolute;
+    right: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 10px;
+    color: var(--navy);
+    pointer-events: none;
+  }
+}
+
+.field-select {
+  width: 100%;
+  appearance: none;
+  -webkit-appearance: none;
+  border: none;
+  border-bottom: 1.5px solid var(--gray-200);
+  padding: 8px 28px 8px 0;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px;
+  color: var(--navy);
+  background: transparent;
+  outline: none;
+  cursor: pointer;
+  transition: border-color 0.2s;
+
+  &:focus { border-bottom-color: var(--navy); }
+
+  option[disabled] { color: var(--gray-400); }
+
+  // Line-only variant (expiry selects — no box)
+  &--line {
+    border-bottom-color: var(--gray-200);
+  }
+}
+
+// ── Note text ─────────────────────────────────────────────────────────────────
+.note-text {
+  font-size: 12px;
+  color: var(--gray-400);
+  line-height: 1.65;
+  margin-bottom: 20px;
+}
+
+// ── Password Policy ───────────────────────────────────────────────────────────
+.policy-box { margin: 20px 0 16px; }
+
+.policy-title {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--purple);
+  margin-bottom: 8px;
+}
+
+.policy-text {
+  font-size: 13px;
+  color: var(--gray-600);
+  line-height: 1.7;
+}
+
+// ── Feedback messages ─────────────────────────────────────────────────────────
+.modal-error {
+  font-size: 13px;
+  color: var(--accent);
+  margin-bottom: 12px;
+  padding: 8px 12px;
+  background: #fff0f0;
+  border-radius: 8px;
+}
+
+.modal-success {
+  font-size: 13px;
+  color: var(--success);
+  margin-bottom: 12px;
+  padding: 8px 12px;
+  background: #f0fdf4;
+  border-radius: 8px;
+}
+
+// ── Login modal action row ────────────────────────────────────────────────────
+.modal-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 8px;
+  gap: 12px;
+}
+
+.btn-cancel {
+  padding: 11px 28px;
+  border-radius: 10px;
+  border: 1.5px solid var(--gray-200);
+  background: var(--white);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px; font-weight: 600;
+  color: var(--navy); cursor: pointer; transition: all 0.18s;
+  &:hover { border-color: var(--gray-400); }
+}
+
+.btn-save {
+  padding: 11px 28px;
+  border-radius: 10px;
+  border: none;
+  background: var(--navy);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px; font-weight: 700;
+  color: var(--white); cursor: pointer; transition: background 0.18s;
+  &:hover { background: var(--navy-light); }
 }
