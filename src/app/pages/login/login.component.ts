@@ -1,5 +1,3 @@
-// src/app/pages/login/login.component.ts
-
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -43,24 +41,41 @@ export class LoginComponent {
     }
 
     this.isLoading = true;
-
-    setTimeout(() => {
-      const success = this.auth.login(this.username, this.password);
-      this.isLoading = false;
-
-      if (success) {
-        // Return to the page they refreshed on, or fall back to /dashboard
-        const returnUrl = this.route.snapshot.queryParamMap.get('returnUrl') ?? '/dashboard';
-        this.router.navigateByUrl(returnUrl);
-      } else {
+    this.auth.login(this.username, this.password).subscribe({
+      next: () => {
+        this.isLoading = false;
+        this.router.navigate(['/dashboard']);
+      },
+      error: () => {
+        this.isLoading = false;
         this.errorMessage = 'Invalid credentials. Please try again.';
+
+      next: (success) => {
+        this.isLoading = false;
+        if (success) {
+          this.router.navigate(['/dashboard']);
+        } else {
+          this.errorMessage = 'Invalid credentials. Please try again.';
+        }
+      },
+      error: () => {
+        this.isLoading = false;
+        this.errorMessage = 'Unable to connect. Please try again.';
+
       }
-    }, 800);
+    });
   }
 
   onRhpLogin(): void {
-    this.auth.login('rhp-user', 'rhp-pass');
-    const returnUrl = this.route.snapshot.queryParamMap.get('returnUrl') ?? '/dashboard';
-    this.router.navigateByUrl(returnUrl);
+    this.auth.login('rhp-user', 'rhp-pass').subscribe({
+
+      next: () => this.router.navigate(['/dashboard'])
+
+      next: (success) => {
+        if (success) this.router.navigate(['/dashboard']);
+        else this.errorMessage = 'RHP login failed.';
+      }
+
+    });
   }
 }

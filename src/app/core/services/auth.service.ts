@@ -1,54 +1,107 @@
-// src/app/core/services/auth.service.ts
-
 import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
-import { BehaviorSubject } from 'rxjs';
-import { Resident } from '../models/resident.model';
-
+import { BehaviorSubject, Observable, map, tap } from 'rxjs';
+import { Resident, LoginResponse } from '../models/resident.model';
+import { environment } from '../../../environments/environment';
 const SESSION_KEY = 'ma_session';
+@Injectable({ providedIn: 'root' })
+export class AuthService {
+  private readonly TOKEN_KEY = 'auth_token';
+  private currentUserSubject = new BehaviorSubject<Resident | null>(null);
+  currentUser$ = this.currentUserSubject.asObservable();
+
+  constructor(private http: HttpClient, private router: Router) {
+    // restore session if token exists in localStorage
+    const token = localStorage.getItem(this.TOKEN_KEY);
+    if (token) {
+      try {
+        const payload = JSON.parse(atob(token.split('.')[1]));
+        this.currentUserSubject.next({
+          id: payload.sub,
+          name: payload.name,
+          unit: payload.unit,
+          community: payload.community,
+          email: payload.email,
+          phone: ''
+        });
+      } catch (e) {
+        localStorage.removeItem(this.TOKEN_KEY);
+      }
+    }
+import { BehaviorSubject, Observable, tap, map } from 'rxjs';
+import { Resident } from '../models/resident.model';
+import { environment } from '../../../environments/environment';
+
+interface LoginResponse {
+  token: string;
+  resident: Resident;
+}
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
-
-
-  // Mock resident data
-  private mockResident: Resident = {
-    id:        'R-0029',
-    name:      'Tony',
-    unit:      '#29',
-    community: 'Apple Meadow',
-    email:     'tony@email.com',
-    phone:     '(555) 123-4567'
-  };
-
-  // ── Rehydrate from localStorage on construction so refresh works ──────────
-  private currentUserSubject = new BehaviorSubject<Resident | null>(
-    this.loadSession()
-  );
+  private currentUserSubject = new BehaviorSubject<Resident | null>(this.loadUser());
   currentUser$ = this.currentUserSubject.asObservable();
 
-  constructor(private router: Router) {}
+  constructor(private http: HttpClient, private router: Router) {}
+
+  private loadUser(): Resident | null {
+    const stored = localStorage.getItem('resident');
+    return stored ? JSON.parse(stored) : null;
+
+  }
 
   get currentUser(): Resident | null {
     return this.currentUserSubject.value;
   }
 
   get isLoggedIn(): boolean {
-    return !!this.currentUserSubject.value;
+
+    return !!this.getToken();
   }
 
-  login(username: string, password: string): boolean {
-    if (username && password) {
-      // persist so page refresh doesn't log the user out
-      localStorage.setItem(SESSION_KEY, JSON.stringify(this.mockResident));
-      this.currentUserSubject.next(this.mockResident);
-      return true;
-    }
-    return false;
+  getToken(): string | null {
+    return localStorage.getItem(this.TOKEN_KEY);
+  }
+
+  login(username: string, password: string): Observable<boolean> {
+    return this.http
+      .post<LoginResponse>(`${environment.apiUrl}/api/auth/login`, { username, password })
+      .pipe(
+        tap(response => {
+          localStorage.setItem(this.TOKEN_KEY, response.token);
+          this.currentUserSubject.next(response.resident);
+        }),
+        map(() => true)
+      );
   }
 
   logout(): void {
-    localStorage.removeItem(SESSION_KEY);
+    localStorage.removeItem(this.TOKEN_KEY);
+
+    return !!localStorage.getItem('token');
+  }
+
+  getToken(): string | null {
+    return localStorage.getItem('token');
+  }
+
+  login(username: string, password: string): Observable<boolean> {
+    return this.http.post<LoginResponse>(`${environment.apiUrl}/api/auth/login`, { username, password }).pipe(
+      tap(res => {
+        localStorage.setItem('token', res.token);
+        localStorage.setItem('resident', JSON.stringify(res.resident));
+        this.currentUserSubject.next(res.resident);
+      }),
+      map(() => true)
+    );
+  }
+
+	logout(): void {
+	localStorage.removeItem(SESSION_KEY);
+    localStorage.removeItem('token');
+    localStorage.removeItem('resident');
+
     this.currentUserSubject.next(null);
     this.router.navigate(['/login']);
   }
