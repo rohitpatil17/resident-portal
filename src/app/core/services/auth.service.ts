@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
+<<<<<<< Updated upstream
 import { BehaviorSubject, Observable, map, tap } from 'rxjs';
 import { Resident, LoginResponse } from '../models/resident.model';
 import { environment } from '../../../environments/environment';
@@ -29,6 +30,27 @@ export class AuthService {
         localStorage.removeItem(this.TOKEN_KEY);
       }
     }
+=======
+import { BehaviorSubject, Observable, tap, map } from 'rxjs';
+import { Resident } from '../models/resident.model';
+import { environment } from '../../../environments/environment';
+
+interface LoginResponse {
+  token: string;
+  resident: Resident;
+}
+
+@Injectable({ providedIn: 'root' })
+export class AuthService {
+  private currentUserSubject = new BehaviorSubject<Resident | null>(this.loadUser());
+  currentUser$ = this.currentUserSubject.asObservable();
+
+  constructor(private http: HttpClient, private router: Router) {}
+
+  private loadUser(): Resident | null {
+    const stored = localStorage.getItem('resident');
+    return stored ? JSON.parse(stored) : null;
+>>>>>>> Stashed changes
   }
 
   get currentUser(): Resident | null {
@@ -36,6 +58,7 @@ export class AuthService {
   }
 
   get isLoggedIn(): boolean {
+<<<<<<< Updated upstream
     return !!this.getToken();
   }
 
@@ -57,6 +80,29 @@ export class AuthService {
 
   logout(): void {
     localStorage.removeItem(this.TOKEN_KEY);
+=======
+    return !!localStorage.getItem('token');
+  }
+
+  getToken(): string | null {
+    return localStorage.getItem('token');
+  }
+
+  login(username: string, password: string): Observable<boolean> {
+    return this.http.post<LoginResponse>(`${environment.apiUrl}/api/auth/login`, { username, password }).pipe(
+      tap(res => {
+        localStorage.setItem('token', res.token);
+        localStorage.setItem('resident', JSON.stringify(res.resident));
+        this.currentUserSubject.next(res.resident);
+      }),
+      map(() => true)
+    );
+  }
+
+  logout(): void {
+    localStorage.removeItem('token');
+    localStorage.removeItem('resident');
+>>>>>>> Stashed changes
     this.currentUserSubject.next(null);
     this.router.navigate(['/login']);
   }

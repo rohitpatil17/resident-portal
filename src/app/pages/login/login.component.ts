@@ -1,5 +1,3 @@
-// src/app/pages/login/login.component.ts
-
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -35,6 +33,7 @@ export class LoginComponent {
     }
     this.isLoading = true;
     this.auth.login(this.username, this.password).subscribe({
+<<<<<<< Updated upstream
       next: () => {
         this.isLoading = false;
         this.router.navigate(['/dashboard']);
@@ -42,13 +41,33 @@ export class LoginComponent {
       error: () => {
         this.isLoading = false;
         this.errorMessage = 'Invalid credentials. Please try again.';
+=======
+      next: (success) => {
+        this.isLoading = false;
+        if (success) {
+          this.router.navigate(['/dashboard']);
+        } else {
+          this.errorMessage = 'Invalid credentials. Please try again.';
+        }
+      },
+      error: () => {
+        this.isLoading = false;
+        this.errorMessage = 'Unable to connect. Please try again.';
+>>>>>>> Stashed changes
       }
     });
   }
 
   onRhpLogin(): void {
     this.auth.login('rhp-user', 'rhp-pass').subscribe({
+<<<<<<< Updated upstream
       next: () => this.router.navigate(['/dashboard'])
+=======
+      next: (success) => {
+        if (success) this.router.navigate(['/dashboard']);
+        else this.errorMessage = 'RHP login failed.';
+      }
+>>>>>>> Stashed changes
     });
   }
 }
