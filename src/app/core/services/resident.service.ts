@@ -1,14 +1,22 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+<<<<<<< Updated upstream
 import {
   BalanceSummary, Transaction, BillingStatement, Notice, AccountSection
 } from '../models/resident.model';
+=======
+import { BalanceSummary, Transaction, BillingStatement, Notice, AccountSection } from '../models/resident.model';
+>>>>>>> Stashed changes
 import { environment } from '../../../environments/environment';
 
 @Injectable({ providedIn: 'root' })
 export class ResidentService {
+<<<<<<< Updated upstream
   private readonly base = `${environment.apiUrl}/api/account`;
+=======
+  private base = `${environment.apiUrl}/api/account`;
+>>>>>>> Stashed changes
 
   constructor(private http: HttpClient) {}
 
