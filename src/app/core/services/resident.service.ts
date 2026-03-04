@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-
 import {
   BalanceSummary, Transaction, BillingStatement, Notice, AccountSection
 } from '../models/resident.model';
