@@ -58,3 +58,7 @@ Thumbs.db
 /.angular/cache/17.3.17/vite/deps/@angular_forms.js
 /.angular/cache/17.3.17/vite/deps/@angular_platform-browser.js
 /.angular/cache/17.3.17/vite/deps/@angular_router.js
+
+# environment files with secrets - local files always ignored, no exceptions
+src/environments/environment*.ts
+src/environments/environment.local*.ts
