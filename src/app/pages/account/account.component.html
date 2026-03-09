@@ -19,6 +19,16 @@
 </div>
 
 <!-- ══════════════════════════════════════════════════════════
+     PAYMENT LOADING SPINNER
+══════════════════════════════════════════════════════════ -->
+<div class="modal-overlay" *ngIf="isPaymentLoading">
+  <div class="modal-panel payment-menu animate" style="align-items:center; justify-content:center; min-height:160px">
+    <div class="loading-spinner"></div>
+    <p style="margin-top:16px; color:var(--navy); font-weight:600;">Loading payment accounts...</p>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════
      LOGIN INFORMATION MODAL
 ══════════════════════════════════════════════════════════ -->
 <div class="modal-overlay" *ngIf="showLoginModal" (click)="closeLoginModal()">
@@ -69,26 +79,99 @@
 </div>
 
 <!-- ══════════════════════════════════════════════════════════
-     PAYMENT ACCOUNTS — MENU
+     PAYMENT ACCOUNTS — MENU (no saved accounts)
 ══════════════════════════════════════════════════════════ -->
 <div class="modal-overlay" *ngIf="paymentView === 'menu'" (click)="closePaymentModal()">
   <div class="modal-panel payment-menu animate" (click)="$event.stopPropagation()">
     <h2 class="modal-title payment-h">Payment Accounts</h2>
-
-    <button class="pay-btn pay-btn--solid" (click)="goToBank()">Add Bank Account</button>
-    <button class="pay-btn pay-btn--solid" (click)="goToCard()">Add Credit Card Account</button>
+    <button class="pay-btn pay-btn--solid"   (click)="goToBank()">Add Bank Account</button>
+    <button class="pay-btn pay-btn--solid"   (click)="goToCard()">Add Credit Card Account</button>
     <button class="pay-btn pay-btn--outline" (click)="closePaymentModal()">Cancel</button>
   </div>
 </div>
 
 <!-- ══════════════════════════════════════════════════════════
-     PAYMENT ACCOUNTS — ADD BANK ACCOUNT
+     PAYMENT ACCOUNTS — DETAILS (existing accounts)
+══════════════════════════════════════════════════════════ -->
+<div class="modal-overlay" *ngIf="paymentView === 'details'" (click)="closePaymentModal()">
+  <div class="modal-panel payment-menu animate" (click)="$event.stopPropagation()">
+    <h2 class="modal-title payment-h">Payment Accounts</h2>
+
+    <!-- ── Primary Bank Account ── -->
+    <ng-container *ngIf="savedBank">
+      <div class="saved-section-title">Primary Bank Account</div>
+
+      <div class="saved-bank-field">
+        <span class="saved-bank-label">Routing Number</span>
+        <span class="saved-bank-value">{{ savedBank.routingNumber || '-' }}</span>
+      </div>
+
+      <div class="saved-bank-field">
+        <span class="saved-bank-label">Account Number</span>
+        <span class="saved-bank-value">{{ getMaskedAccount(savedBank.accountNumber) || '-' }}</span>
+      </div>
+    </ng-container>
+
+    <!-- ── Primary Credit Card Account ── -->
+    <ng-container *ngIf="savedCard">
+      <div class="saved-section-title" [style.margin-top]="savedBank ? '16px' : '0'">
+        Primary Credit Card Account
+      </div>
+
+      <div class="saved-bank-field">
+        <span class="saved-bank-label">Account Number</span>
+        <span class="saved-bank-value">{{ savedCard.accountNumber || '-' }}</span>
+      </div>
+    </ng-container>
+
+    <!-- ── Action Buttons ── -->
+    <div class="pay-btn-group">
+      <!-- Bank buttons -->
+      <ng-container *ngIf="savedBank">
+        <button class="pay-btn pay-btn--solid" (click)="goToBank()">Edit Bank Account</button>
+        <div class="modal-error" *ngIf="removeError">{{ removeError }}</div>
+        <button
+          class="pay-btn pay-btn--solid"
+          [disabled]="isRemoveLoading"
+          (click)="removeBankAccount()">
+          {{ isRemoveLoading ? 'Removing...' : 'Remove Bank Account' }}
+        </button>
+      </ng-container>
+
+      <button class="pay-btn pay-btn--solid" *ngIf="!savedBank" (click)="goToBank()">
+        Add Bank Account
+      </button>
+
+      <!-- Card buttons -->
+      <ng-container *ngIf="savedCard">
+        <button class="pay-btn pay-btn--solid" (click)="goToCard()">Edit Credit Card Account</button>
+        <div class="modal-error" *ngIf="removeCardError">{{ removeCardError }}</div>
+        <button
+          class="pay-btn pay-btn--solid"
+          [disabled]="isRemoveCardLoading"
+          (click)="removeCardAccount()">
+          {{ isRemoveCardLoading ? 'Removing...' : 'Remove Credit Card Account' }}
+        </button>
+      </ng-container>
+
+      <button class="pay-btn pay-btn--solid" *ngIf="!savedCard" (click)="goToCard()">
+        Add Credit Card Account
+      </button>
+
+      <button class="pay-btn pay-btn--outline" (click)="closePaymentModal()">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════
+     PAYMENT ACCOUNTS — ADD / EDIT BANK ACCOUNT
 ══════════════════════════════════════════════════════════ -->
 <div class="modal-overlay" *ngIf="paymentView === 'bank'" (click)="closePaymentModal()">
   <div class="modal-panel animate" (click)="$event.stopPropagation()">
-    <h2 class="modal-title payment-h">Add Bank Account</h2>
+    <h2 class="modal-title payment-h">
+      {{ savedBank ? 'Edit Bank Account' : 'Add Bank Account' }}
+    </h2>
 
-    <!-- Account type -->
     <div class="field-group">
       <label class="field-label">Account type</label>
       <div class="select-wrapper">
@@ -99,7 +182,6 @@
       </div>
     </div>
 
-    <!-- Name on bank account -->
     <div class="field-group">
       <label class="field-label">
         Name on bank account
@@ -108,17 +190,14 @@
       <input class="field-input" type="text" [(ngModel)]="bankForm.name" />
     </div>
 
-    <!-- Routing number -->
     <div class="field-group">
       <label class="field-label">
         Routing number
         <span class="field-link">(Where can I find this?)</span>
       </label>
-      <input class="field-input field-box" type="text" maxlength="9"
-             [(ngModel)]="bankForm.routing" placeholder="" />
+      <input class="field-input field-box" type="text" maxlength="9" [(ngModel)]="bankForm.routing" />
     </div>
 
-    <!-- Account number -->
     <div class="field-group">
       <label class="field-label">
         Account number
@@ -127,7 +206,6 @@
       <input class="field-input" type="text" [(ngModel)]="bankForm.account" />
     </div>
 
-    <!-- Re-enter account number -->
     <div class="field-group">
       <label class="field-label">Re-enter account number</label>
       <input class="field-input" type="text" [(ngModel)]="bankForm.reAccount" />
@@ -142,37 +220,37 @@
     <div class="modal-error"   *ngIf="bankError">{{ bankError }}</div>
     <div class="modal-success" *ngIf="bankSuccess">{{ bankSuccess }}</div>
 
-    <button class="pay-btn pay-btn--solid" (click)="saveBankAccount()">Save and Continue</button>
+    <button class="pay-btn pay-btn--solid" [disabled]="isBankLoading" (click)="saveBankAccount()">
+      {{ isBankLoading ? 'Saving...' : 'Save and Continue' }}
+    </button>
     <button class="pay-btn pay-btn--outline" (click)="openPaymentMenu()">Cancel</button>
   </div>
 </div>
 
 <!-- ══════════════════════════════════════════════════════════
-     PAYMENT ACCOUNTS — ADD CREDIT CARD
+     PAYMENT ACCOUNTS — ADD / EDIT CREDIT CARD
 ══════════════════════════════════════════════════════════ -->
 <div class="modal-overlay" *ngIf="paymentView === 'card'" (click)="closePaymentModal()">
   <div class="modal-panel animate" (click)="$event.stopPropagation()">
-    <h2 class="modal-title payment-h">Add Credit Card</h2>
+    <h2 class="modal-title payment-h">
+      {{ savedCard ? 'Edit Credit Card' : 'Add Credit Card' }}
+    </h2>
 
-    <!-- Cardholder Name -->
     <div class="field-group">
       <label class="field-label">Cardholder Name</label>
       <input class="field-input" type="text" [(ngModel)]="cardForm.cardholderName" />
     </div>
 
-    <!-- Card Number -->
     <div class="field-group">
       <label class="field-label">Card Number</label>
       <input class="field-input" type="text" maxlength="19" [(ngModel)]="cardForm.cardNumber" />
     </div>
 
-    <!-- Re-enter Card Number -->
     <div class="field-group">
       <label class="field-label">Re-enter Card Number</label>
       <input class="field-input" type="text" maxlength="19" [(ngModel)]="cardForm.reCardNumber" />
     </div>
 
-    <!-- Expiration Month -->
     <div class="field-group">
       <label class="field-label">Expiration Month</label>
       <div class="select-wrapper">
@@ -183,7 +261,6 @@
       </div>
     </div>
 
-    <!-- Expiration Year -->
     <div class="field-group">
       <label class="field-label">Expiration Year</label>
       <div class="select-wrapper">
@@ -194,7 +271,6 @@
       </div>
     </div>
 
-    <!-- CVV -->
     <div class="field-group">
       <label class="field-label">CVV/Security Code</label>
       <input class="field-input" type="text" maxlength="4" [(ngModel)]="cardForm.cvv" />
@@ -203,7 +279,9 @@
     <div class="modal-error"   *ngIf="cardError">{{ cardError }}</div>
     <div class="modal-success" *ngIf="cardSuccess">{{ cardSuccess }}</div>
 
-    <button class="pay-btn pay-btn--solid"   (click)="saveCreditCard()">Save and Continue</button>
+    <button class="pay-btn pay-btn--solid" [disabled]="isBankLoading" (click)="saveCreditCard()">
+      {{ isBankLoading ? 'Saving...' : 'Save and Continue' }}
+    </button>
     <button class="pay-btn pay-btn--outline" (click)="openPaymentMenu()">Cancel</button>
   </div>
 </div>
