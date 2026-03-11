@@ -6,11 +6,12 @@ import { RouterModule, NavigationEnd, Router } from '@angular/router';
 import { filter, map } from 'rxjs/operators';
 import { SidebarComponent } from '../shared/components/sidebar/sidebar.component';
 import { TopbarComponent } from '../shared/components/topbar/topbar.component';
+import { ChatbotComponent } from '../shared/components/chatbot/chatbot.component';
 
 @Component({
   selector: 'app-layout',
   standalone: true,
-  imports: [CommonModule, RouterModule, SidebarComponent, TopbarComponent],
+  imports: [CommonModule, RouterModule, SidebarComponent, TopbarComponent, ChatbotComponent],
   template: `
     <!-- Mobile overlay -->
     <div class="sidebar-overlay" [class.visible]="sidebarOpen" (click)="closeSidebar()"></div>
@@ -50,6 +51,8 @@ import { TopbarComponent } from '../shared/components/topbar/topbar.component';
         </div>
       </div>
     </div>
+
+    <app-chatbot></app-chatbot>
   `,
   styles: [`
     .sidebar-overlay {

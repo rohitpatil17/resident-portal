@@ -1,101 +1,98 @@
-# ManageAmerica — Resident Portal (Angular)
+# Resident Portal — Angular
 
-Modern rebuild of the RP Web using **Angular 17** (standalone components), **SCSS**, and **RxJS**.
+Angular frontend for the Resident Portal POC. Connects to the [resident-portal-api-poc](https://github.com/adeshkadu511/resident-portal-api-poc) .NET backend.
 
 ---
 
-## 🚀 Quick Start
+## Quick Start
 
 ```bash
-# 1. Install dependencies
 npm install
-
-# 2. Start dev server
 ng serve
-
-# 3. Open browser
-http://localhost:4200
 ```
 
-Login with **any username + password** (mock auth).
+Open [http://localhost:4200](http://localhost:4200). The API must be running at `http://localhost:5000`.
+
+Copy `src/environments/environment.template` to `src/environments/environment.ts` and fill in any values needed.
 
 ---
 
-## 📁 Project Structure
+## Project Structure
 
 ```
 src/app/
 ├── core/
 │   ├── models/
-│   │   └── resident.model.ts       ← All TypeScript interfaces
+│   │   └── resident.model.ts         — all TypeScript interfaces
 │   ├── services/
-│   │   ├── auth.service.ts         ← Login / logout / session
-│   │   └── resident.service.ts     ← Balance, billing, notices (mock data)
+│   │   ├── auth.service.ts           — login / logout / JWT session
+│   │   ├── resident.service.ts       — account API calls
+│   │   └── chat.service.ts           — MAI chatbot API calls
+│   ├── interceptors/
+│   │   └── auth.interceptor.ts       — attaches Bearer token to requests
 │   └── guards/
-│       └── auth.guard.ts           ← Route protection
+│       └── auth.guard.ts             — redirects unauthenticated users
 │
 ├── shared/
 │   └── components/
-│       ├── logo/                   ← <app-logo> — ManageAmerica brand mark
-│       ├── sidebar/                ← <app-sidebar> — nav + user + logout
-│       └── topbar/                 ← <app-topbar> — page title + notifications
+│       ├── sidebar/                  — nav + user info + logout
+│       ├── topbar/                   — page title + notifications
+│       ├── chatbot/                  — MAI floating chat bubble
+│       └── coming-soon/              — placeholder for unbuilt pages
 │
 ├── layout/
-│   └── app-layout.component.ts     ← Shell: sidebar + topbar + <router-outlet>
+│   └── app-layout.component.ts       — shell: sidebar + topbar + router-outlet
 │
 └── pages/
-    ├── login/                      ← /login
-    ├── dashboard/                  ← /dashboard
-    ├── payment/                    ← /payment
-    ├── billing/                    ← /billing  (3 tabs)
-    └── account/                    ← /account
+    ├── login/                        — /login
+    ├── dashboard/                    — /dashboard
+    ├── payment/                      — /payment
+    ├── billing/                      — /billing
+    └── account/                      — /account
 ```
 
 ---
 
-## 🔀 Routes
+## Routes
 
-| Path         | Component           | Guard  |
-|--------------|---------------------|--------|
-| `/login`     | `LoginComponent`    | ✗      |
-| `/dashboard` | `DashboardComponent`| ✓ Auth |
-| `/payment`   | `PaymentComponent`  | ✓ Auth |
-| `/billing`   | `BillingComponent`  | ✓ Auth |
-| `/account`   | `AccountComponent`  | ✓ Auth |
+| Path         | Component            | Auth |
+|--------------|----------------------|------|
+| `/login`     | `LoginComponent`     | No   |
+| `/dashboard` | `DashboardComponent` | Yes  |
+| `/payment`   | `PaymentComponent`   | Yes  |
+| `/billing`   | `BillingComponent`   | Yes  |
+| `/account`   | `AccountComponent`   | Yes  |
+| `/documents` | `ComingSoonComponent`| Yes  |
+| `/faq`       | `ComingSoonComponent`| Yes  |
 
 ---
 
-## 🎨 Design System
+## AI Chatbot (MAI)
 
-All tokens in `src/styles.scss` as CSS variables:
+The floating chat bubble in the bottom-right corner sends messages to the backend, which fetches the resident's live account data and uses it as context for the AI response. No account data is sent from the frontend.
 
-```scss
---navy, --purple, --purple-bg, --teal, --accent, --gold, --success
+---
+
+## Design System
+
+CSS variables defined in `src/styles.scss`:
+
+```
+--navy, --purple, --purple-bg, --teal, --accent, --success
 --gray-50 → --gray-800
 --shadow-sm, --shadow-md, --shadow-lg
+--radius
 ```
 
 ---
 
-## 🔧 Next Steps (Production Readiness)
+## Tech Stack
 
-- [ ] Replace mock services with real HTTP API calls
-- [ ] Add `HttpInterceptor` for auth token injection
-- [ ] Integrate real payment gateway (Stripe / Forte)
-- [ ] Add Angular Material or PrimeNG for form components
-- [ ] Write unit tests with Jest / Karma
-- [ ] Add lazy loading for page routes
-- [ ] Set up CI/CD pipeline
-
----
-
-## 🛠 Tech Stack
-
-| Layer       | Tech                        |
-|-------------|-----------------------------|
-| Framework   | Angular 17 (Standalone)     |
-| Styling     | SCSS + CSS Custom Properties|
-| State       | RxJS BehaviorSubject        |
-| Routing     | Angular Router              |
-| HTTP        | Angular HttpClient (ready)  |
-| Fonts       | DM Sans + Playfair Display  |
+| Layer      | Tech                          |
+|------------|-------------------------------|
+| Framework  | Angular 17 (standalone)       |
+| Styling    | SCSS + CSS custom properties  |
+| State      | RxJS BehaviorSubject          |
+| HTTP       | Angular HttpClient            |
+| Auth       | HttpInterceptor               |
+| Fonts      | DM Sans, Playfair Display     |

@@ -8,6 +8,7 @@ import { DashboardComponent } from './pages/dashboard/dashboard.component';
 import { PaymentComponent } from './pages/payment/payment.component';
 import { BillingComponent } from './pages/billing/billing.component';
 import { AccountComponent } from './pages/account/account.component';
+import { ComingSoonComponent } from './shared/components/coming-soon/coming-soon.component';
 
 export const routes: Routes = [
   {
@@ -24,6 +25,8 @@ export const routes: Routes = [
       { path: 'payment',   component: PaymentComponent },
       { path: 'billing',   component: BillingComponent },
       { path: 'account',   component: AccountComponent },
+      { path: 'documents', component: ComingSoonComponent },
+      { path: 'faq',       component: ComingSoonComponent },
     ]
   },
   { path: '**', redirectTo: 'login' }

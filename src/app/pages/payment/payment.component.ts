@@ -3,6 +3,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ResidentService } from '../../core/services/resident.service';
+import { AuthService } from '../../core/services/auth.service';
 import { BalanceSummary } from '../../core/models/resident.model';
 
 @Component({
@@ -15,7 +16,7 @@ import { BalanceSummary } from '../../core/models/resident.model';
 export class PaymentComponent implements OnInit {
   balance!: BalanceSummary;
 
-  constructor(private residentService: ResidentService) {}
+  constructor(private residentService: ResidentService, public auth: AuthService) {}
 
   ngOnInit(): void {
     this.residentService.getBalanceSummary().subscribe(b => this.balance = b);

@@ -53,11 +53,11 @@
 
       <div class="summary-row">
         <span class="s-label">Site</span>
-        <span class="s-value">#29 Apple Meadow</span>
+        <span class="s-value">{{ auth.currentUser?.unit }}</span>
       </div>
       <div class="summary-row">
         <span class="s-label">Resident</span>
-        <span class="s-value">Tony</span>
+        <span class="s-value">{{ auth.currentUser?.name }}</span>
       </div>
       <div class="summary-row">
         <span class="s-label">Rent</span>
