@@ -1,5 +1,3 @@
-// src/app/core/services/auth.service.ts
-
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
@@ -12,7 +10,7 @@ interface LoginResponse {
   resident: Resident;
 }
 
-const TOKEN_KEY    = 'ma_token';
+const TOKEN_KEY = 'ma_token';
 const RESIDENT_KEY = 'ma_resident';
 
 @Injectable({ providedIn: 'root' })
@@ -25,8 +23,6 @@ export class AuthService {
 
   constructor(private http: HttpClient, private router: Router) {}
 
-  // ── Getters ───────────────────────────────────────────────────────────────
-
   get currentUser(): Resident | null {
     return this.currentUserSubject.value;
   }
@@ -38,8 +34,6 @@ export class AuthService {
   getToken(): string | null {
     return localStorage.getItem(TOKEN_KEY);
   }
-
-  // ── Auth actions ──────────────────────────────────────────────────────────
 
   login(username: string, password: string): Observable<boolean> {
     return this.http
@@ -61,13 +55,11 @@ export class AuthService {
     this.router.navigate(['/login']);
   }
 
-  // ── Private ───────────────────────────────────────────────────────────────
-
   private loadResident(): Resident | null {
     try {
       const raw = localStorage.getItem(RESIDENT_KEY);
       return raw ? (JSON.parse(raw) as Resident) : null;
-    } catch {
+    } catch (e) {
       return null;
     }
   }
