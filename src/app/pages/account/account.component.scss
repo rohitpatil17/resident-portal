@@ -2,42 +2,52 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 17px 0;
+  padding: 20px 0;            // ↑ was 17px — more breathing room
   border-bottom: 1px solid var(--gray-100);
   &:last-child { border-bottom: none; }
 }
+
 .account-page {
-  padding: 32px 24px 48px;
-  max-width: 760px;
-  margin: 0 auto;
-  width: 100%;
+  min-height: unset;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 24px 16px;
 }
+
+.account-page .card {
+  width: 100%;
+  max-width: 700px;
+}
+
 .page-header {
   margin-bottom: 24px;
 }
 
 .page-title {
-  font-size: 22px;
+  font-size: 24px;            // ↑ was 22px
   font-weight: 800;
   color: var(--navy);
   margin: 0 0 4px;
 }
 
 .page-subtitle {
-  font-size: 13px;
+  font-size: 14px;            // ↑ was 13px
   color: var(--gray-400);
   margin: 0;
 }
-.row-title { font-size: 14px; font-weight: 700; color: var(--purple); }
-.row-desc  { font-size: 12px; color: var(--gray-400); margin-top: 3px; }
+
+.row-title { font-size: 15px;  font-weight: 700; color: var(--purple); }  // ↑ was 14px
+.row-desc  { font-size: 13px;  color: var(--gray-400); margin-top: 3px; } // ↑ was 12px
 
 .btn-view {
-  padding: 7px 19px;
+  padding: 8px 22px;          // ↑ was 7px 19px
   border-radius: 9px;
   border: 1.5px solid var(--gray-200);
   background: var(--white);
   font-family: 'DM Sans', sans-serif;
-  font-size: 13px; font-weight: 600;
+  font-size: 14px; font-weight: 600;  // ↑ was 13px
   color: var(--navy); cursor: pointer; transition: all .18s;
 
   &:hover:not(.disabled) {
@@ -80,14 +90,14 @@
 
 // ── Headings ──────────────────────────────────────────────────────────────────
 .modal-title {
-  font-size: 20px;
+  font-size: 22px;            // ↑ was 20px
   font-weight: 800;
   color: var(--navy);
   margin-bottom: 24px;
 }
 
 .payment-h {
-  font-size: 26px;
+  font-size: 28px;            // ↑ was 26px
   font-weight: 900;
   letter-spacing: -0.5px;
   margin-bottom: 28px;
@@ -97,11 +107,11 @@
 .pay-btn {
   display: block;
   width: 100%;
-  padding: 16px;
+  padding: 17px 16px;         // ↑ was 16px — taller tap target
   margin-bottom: 14px;
   border-radius: 6px;
   font-family: 'DM Sans', sans-serif;
-  font-size: 15px;
+  font-size: 16px;            // ↑ was 15px
   font-weight: 600;
   cursor: pointer;
   transition: all 0.18s;
@@ -113,7 +123,6 @@
     background: var(--navy);
     color: var(--white);
     border: none;
-
     &:hover { background: var(--navy-light); }
   }
 
@@ -121,24 +130,23 @@
     background: var(--white);
     color: var(--purple);
     border: 1.5px solid var(--gray-200);
-
     &:hover { border-color: var(--purple); }
   }
 }
 
 // ── Form Fields ───────────────────────────────────────────────────────────────
-.field-group { margin-bottom: 20px; }
+.field-group { margin-bottom: 22px; }  // ↑ was 20px
 
 .field-label {
   display: block;
-  font-size: 13px;
+  font-size: 14px;            // ↑ was 13px
   color: var(--gray-600);
-  margin-bottom: 6px;
+  margin-bottom: 7px;
 }
 
 .field-link {
   color: var(--navy);
-  font-size: 12px;
+  font-size: 13px;            // ↑ was 12px
   margin-left: 4px;
   cursor: pointer;
   &:hover { text-decoration: underline; }
@@ -148,15 +156,15 @@
   width: 100%;
   border: none;
   border-bottom: 1.5px solid var(--gray-200);
-  padding: 7px 0;
+  padding: 9px 0;             // ↑ was 7px
   font-family: 'DM Sans', sans-serif;
-  font-size: 14px;
+  font-size: 15px;            // ↑ was 14px
   color: var(--navy);
   outline: none;
   background: transparent;
   transition: border-color 0.2s;
 
-  &::placeholder { color: var(--gray-400); font-size: 13px; }
+  &::placeholder { color: var(--gray-400); font-size: 14px; } // ↑ was 13px
   &:focus { border-bottom-color: var(--navy); }
 }
 
@@ -164,7 +172,7 @@
 .field-box {
   border: 1.5px solid var(--gray-200);
   border-radius: 6px;
-  padding: 10px 12px;
+  padding: 11px 12px;         // ↑ was 10px
   width: 100%;
 
   &:focus { border-color: var(--navy); outline: none; }
@@ -176,7 +184,7 @@
 // Highlighted current-password
 .field-active {
   background: var(--purple-bg);
-  padding: 8px 10px;
+  padding: 9px 10px;          // ↑ was 8px
   border-radius: 8px;
   border: 1.5px solid var(--gray-200);
 }
@@ -191,7 +199,7 @@
     right: 8px;
     top: 50%;
     transform: translateY(-50%);
-    font-size: 10px;
+    font-size: 11px;           // ↑ was 10px
     color: var(--navy);
     pointer-events: none;
   }
@@ -203,9 +211,9 @@
   -webkit-appearance: none;
   border: none;
   border-bottom: 1.5px solid var(--gray-200);
-  padding: 8px 28px 8px 0;
+  padding: 9px 28px 9px 0;    // ↑ was 8px
   font-family: 'DM Sans', sans-serif;
-  font-size: 14px;
+  font-size: 15px;            // ↑ was 14px
   color: var(--navy);
   background: transparent;
   outline: none;
@@ -213,18 +221,13 @@
   transition: border-color 0.2s;
 
   &:focus { border-bottom-color: var(--navy); }
-
   option[disabled] { color: var(--gray-400); }
-
-  // Line-only variant (expiry selects — no box)
-  &--line {
-    border-bottom-color: var(--gray-200);
-  }
+  &--line { border-bottom-color: var(--gray-200); }
 }
 
 // ── Note text ─────────────────────────────────────────────────────────────────
 .note-text {
-  font-size: 12px;
+  font-size: 13px;            // ↑ was 12px
   color: var(--gray-400);
   line-height: 1.65;
   margin-bottom: 20px;
@@ -234,33 +237,33 @@
 .policy-box { margin: 20px 0 16px; }
 
 .policy-title {
-  font-size: 13px;
+  font-size: 14px;            // ↑ was 13px
   font-weight: 700;
   color: var(--purple);
   margin-bottom: 8px;
 }
 
 .policy-text {
-  font-size: 13px;
+  font-size: 14px;            // ↑ was 13px
   color: var(--gray-600);
   line-height: 1.7;
 }
 
 // ── Feedback messages ─────────────────────────────────────────────────────────
 .modal-error {
-  font-size: 13px;
+  font-size: 14px;            // ↑ was 13px
   color: var(--accent);
   margin-bottom: 12px;
-  padding: 8px 12px;
+  padding: 9px 13px;
   background: #fff0f0;
   border-radius: 8px;
 }
 
 .modal-success {
-  font-size: 13px;
+  font-size: 14px;            // ↑ was 13px
   color: var(--success);
   margin-bottom: 12px;
-  padding: 8px 12px;
+  padding: 9px 13px;
   background: #f0fdf4;
   border-radius: 8px;
 }
@@ -275,35 +278,36 @@
 }
 
 .btn-cancel {
-  padding: 11px 28px;
+  padding: 12px 30px;         // ↑ was 11px 28px
   border-radius: 10px;
   border: 1.5px solid var(--gray-200);
   background: var(--white);
   font-family: 'DM Sans', sans-serif;
-  font-size: 14px; font-weight: 600;
+  font-size: 15px; font-weight: 600;  // ↑ was 14px
   color: var(--navy); cursor: pointer; transition: all 0.18s;
   &:hover { border-color: var(--gray-400); }
 }
 
 .btn-save {
-  padding: 11px 28px;
+  padding: 12px 30px;         // ↑ was 11px 28px
   border-radius: 10px;
   border: none;
   background: var(--navy);
   font-family: 'DM Sans', sans-serif;
-  font-size: 14px; font-weight: 700;
+  font-size: 15px; font-weight: 700;  // ↑ was 14px
   color: var(--white); cursor: pointer; transition: background 0.18s;
   &:hover { background: var(--navy-light); }
 }
+
 // ── Saved Bank Details ────────────────────────────────────────────────────────
 .saved-bank-info {
   margin-bottom: 24px;
 }
 
 .saved-bank-title {
-  font-size: 15px;
+  font-size: 16px;            // ↑ was 15px
   font-weight: 700;
-  color: #5bc4d1;        // teal — matches the screenshot
+  color: #5bc4d1;
   margin-bottom: 14px;
 }
 
@@ -314,16 +318,17 @@
 }
 
 .saved-bank-label {
-  font-size: 12px;
-  color: #5bc4d1;        // teal label
+  font-size: 13px;            // ↑ was 12px
+  color: #5bc4d1;
   margin-bottom: 2px;
 }
 
 .saved-bank-value {
-  font-size: 15px;
+  font-size: 16px;            // ↑ was 15px
   font-weight: 600;
   color: var(--navy);
 }
+
 // ── Loading Spinner ───────────────────────────────────────────────────────────
 .loading-spinner {
   width: 40px;

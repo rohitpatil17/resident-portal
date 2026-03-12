@@ -53,24 +53,24 @@
   position: relative; z-index: 1;
   display: flex;
   justify-content: space-between;
-  align-items: center;           // vertically center left & right
+  align-items: center;
   flex-wrap: wrap;
   gap: 20px;
 }
 
 .balance-label {
-  font-size: 9.5px;
+  font-size: 11px;            // ↑ was 9.5px
   font-weight: 700;
-  color: rgba(255, 255, 255, .40);
+  color: rgba(255, 255, 255, .82);
   text-transform: uppercase;
   letter-spacing: 2px;
   margin-bottom: 6px;
 }
 
-// ── Amount — Plus Jakarta Sans: round, friendly, still impactful ─────────────
+// ── Amount ────────────────────────────────────────────────────────────────────
 .balance-amount {
   font-family: 'Plus Jakarta Sans', 'DM Sans', sans-serif;
-  font-size: 45px;
+  font-size: 52px;            // ↑ was 45px
   font-weight: 800;
   letter-spacing: -2.5px;
   line-height: 1;
@@ -78,22 +78,22 @@
   margin-bottom: 6px;
 
   .currency {
-    font-size: 24px;
+    font-size: 28px;          // ↑ was 24px
     font-weight: 600;
     vertical-align: super;
     margin-right: 1px;
-    opacity: .50;
+    opacity: 1;
     letter-spacing: 0;
   }
 }
 
-// ── Due date + context — inline with separator dot ────────────────────────────
+// ── Due date + context ────────────────────────────────────────────────────────
 .balance-meta {
   display: flex;
   align-items: center;
   gap: 6px;
-  font-size: 12px;
-  color: rgba(255, 255, 255, .42);
+  font-size: 13.5px;          // ↑ was 12px
+  color:  rgba(255, 255, 255, .82);
   margin-bottom: 18px;
 
   strong {
@@ -117,7 +117,7 @@
   background: rgba(255, 255, 255, .06);
   border: 1px solid rgba(255, 255, 255, .09);
   border-radius: 100px;
-  padding: 6px 12px;
+  padding: 7px 14px;          // ↑ slightly taller
   gap: 10px;
 }
 
@@ -129,13 +129,13 @@
 }
 
 .bc-chip-label {
-  font-size: 10px;
+  font-size: 11.5px;          // ↑ was 10px
   font-weight: 500;
-  color: rgba(255, 255, 255, .38);
+  color: rgba(255, 255, 255, .82);;
 }
 
 .bc-chip-value {
-  font-size: 12px;
+  font-size: 13.5px;          // ↑ was 12px
   font-weight: 700;
   color: var(--white);
 
@@ -162,9 +162,9 @@
   display: inline-flex;
   align-items: center;
   gap: 7px;
-  padding: 7px 15px;
+  padding: 8px 16px;          // ↑ taller tap target
   border-radius: 100px;
-  font-size: 11px;
+  font-size: 12.5px;          // ↑ was 11px
   font-weight: 700;
   background: rgba(248, 113, 113, .16);
   border: 1px solid rgba(248, 113, 113, .28);
@@ -188,9 +188,9 @@
   color: var(--white);
   border: 1.5px solid rgba(255, 255, 255, .30);
   border-radius: 13px;
-  padding: 13px 30px;
+  padding: 14px 32px;         // ↑ slightly taller
   font-family: 'DM Sans', sans-serif;
-  font-size: 14px;
+  font-size: 15px;            // ↑ was 14px
   font-weight: 700;
   cursor: pointer;
   transition: all .22s ease;
@@ -222,7 +222,7 @@
 .quick-card {
   background: var(--white);
   border-radius: 18px;
-  padding: 22px 20px 20px;
+  padding: 24px 22px;         // ↑ slightly more breathing room
   cursor: pointer;
   transition: all .22s ease;
   border: 1.5px solid var(--gray-200);
@@ -245,14 +245,14 @@
 
 // ── ICON BOXES ───────────────────────────────────────────────────────────────
 .quick-icon {
-  width: 46px; height: 46px;
-  border-radius: 13px;
+  width: 50px; height: 50px;  // ↑ was 46px
+  border-radius: 14px;
   display: flex;
   align-items: center;
   justify-content: center;
   transition: transform .2s;
 
-  svg { width: 22px; height: 22px; }
+  svg { width: 24px; height: 24px; } // ↑ was 22px
 
   .quick-card:hover & { transform: scale(1.1); }
 
@@ -270,13 +270,13 @@
 
 .quick-label {
   .quick-title {
-    font-size: 13.5px;
+    font-size: 15px;          // ↑ was 13.5px
     font-weight: 700;
     color: var(--gray-800);
-    margin-bottom: 3px;
+    margin-bottom: 4px;
   }
   .quick-desc {
-    font-size: 11.5px;
+    font-size: 12.5px;        // ↑ was 11.5px
     color: var(--gray-400);
     line-height: 1.55;
   }
@@ -296,15 +296,15 @@
   display: flex;
   align-items: center;
   gap: 11px;
-  padding: 11px 0;
+  padding: 13px 0;            // ↑ was 11px — more tap area
   border-bottom: 1px solid var(--gray-100);
 
   &:last-child { border-bottom: none; padding-bottom: 0; }
 }
 
 .tx-icon {
-  width: 36px; height: 36px;
-  border-radius: 10px;
+  width: 40px; height: 40px;  // ↑ was 36px
+  border-radius: 11px;
   background: var(--gray-100);
   display: flex;
   align-items: center;
@@ -312,17 +312,17 @@
   flex-shrink: 0;
   color: var(--primary-light);
 
-  svg { width: 16px; height: 16px; }
+  svg { width: 18px; height: 18px; } // ↑ was 16px
 
   &.pending { color: var(--gray-400); }
 }
 
 .tx-info  { flex: 1; }
-.tx-name  { font-size: 12.5px; font-weight: 600; color: var(--gray-800); }
-.tx-date  { font-size: 11px;   color: var(--gray-400); margin-top: 2px;  }
+.tx-name  { font-size: 14px;  font-weight: 600; color: var(--gray-800); } // ↑ was 12.5px
+.tx-date  { font-size: 12px;  color: var(--gray-400); margin-top: 2px;  } // ↑ was 11px
 
 .tx-amount {
-  font-size: 13px;
+  font-size: 14.5px;          // ↑ was 13px
   font-weight: 700;
   color: var(--primary);
 
@@ -335,14 +335,14 @@
 .notice-item {
   display: flex;
   gap: 11px;
-  padding: 11px 0;
+  padding: 13px 0;            // ↑ was 11px
   border-bottom: 1px solid var(--gray-100);
 
   &:last-child { border-bottom: none; }
 }
 
 .notice-dot {
-  width: 7px; height: 7px;
+  width: 8px; height: 8px;    // ↑ was 7px
   border-radius: 50%;
   flex-shrink: 0;
   margin-top: 5px;
@@ -352,8 +352,8 @@
   &.alert   { background: var(--primary); }
 }
 
-.notice-title { font-size: 12px; font-weight: 600; color: var(--gray-800); }
-.notice-date  { font-size: 11px; color: var(--gray-400); margin-top: 2px;  }
+.notice-title { font-size: 13.5px; font-weight: 600; color: var(--gray-800); } // ↑ was 12px
+.notice-date  { font-size: 12px;   color: var(--gray-400); margin-top: 2px;  } // ↑ was 11px
 
 
 // ── RESPONSIVE ───────────────────────────────────────────────────────────────
@@ -363,7 +363,7 @@
 
 @media (max-width: 768px) {
   .balance-card    { padding: 22px; border-radius: 18px; }
-  .balance-amount  { font-size: 40px; letter-spacing: -2px; }
+  .balance-amount  { font-size: 44px; letter-spacing: -2px; }
   .balance-inner   { align-items: flex-start; }
   .balance-right   {
     flex-direction: row;
@@ -372,19 +372,19 @@
     justify-content: space-between;
   }
   .quick-grid  { grid-template-columns: repeat(2, 1fr); gap: 11px; }
-  .quick-card  { padding: 17px 15px; gap: 11px; }
+  .quick-card  { padding: 18px 15px; gap: 11px; }
   .bottom-grid { gap: 14px; }
 }
 
 @media (max-width: 480px) {
   .balance-card      { padding: 18px; }
-  .balance-amount    { font-size: 32px; letter-spacing: -1.5px; }
+  .balance-amount    { font-size: 36px; letter-spacing: -1.5px; }
   .balance-breakdown { display: none; }
-  .balance-meta      { font-size: 11px; }
+  .balance-meta      { font-size: 12px; }
   .quick-grid        { grid-template-columns: repeat(2, 1fr); gap: 9px; }
-  .quick-card        { padding: 14px 12px; gap: 9px; }
-  .quick-icon        { width: 40px; height: 40px; border-radius: 11px; }
-  .quick-title       { font-size: 12.5px; }
+  .quick-card        { padding: 15px 13px; gap: 9px; }
+  .quick-icon        { width: 44px; height: 44px; border-radius: 12px; }
+  .quick-title       { font-size: 13.5px; }
   .quick-desc        { display: none; }
-  .btn-pay           { padding: 11px 20px; font-size: 13px; }
+  .btn-pay           { padding: 12px 22px; font-size: 14px; }
 }

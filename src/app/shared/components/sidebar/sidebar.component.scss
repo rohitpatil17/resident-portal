@@ -46,42 +46,38 @@
   z-index: 1;
 }
 
-// Outer wrapper — circle + wordmark side by side
 .rhp-logo {
   display: flex;
   align-items: center;
   gap: 10px;
 }
 
-// Dark blue circle with italic "rhp"
 .rhp-badge {
-  width: 44px;
-  height: 44px;
+  width: 46px;                          // ↑ was 44px
+  height: 46px;
   border-radius: 50%;
-  background: #1A4F8A;                // RHP dark navy-blue
+  background: #1A4F8A;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 15px;
+  font-size: 16px;                      // ↑ was 15px
   font-weight: 800;
   font-style: italic;
   color: var(--white);
   flex-shrink: 0;
   letter-spacing: -0.5px;
-  font-family: Georgia, 'Times New Roman', serif;  // serif italic matches original
+  font-family: Georgia, 'Times New Roman', serif;
   box-shadow:
     0 0 0 2px rgba(255, 255, 255, 0.15),
     0 3px 12px rgba(26, 79, 138, 0.50);
 }
 
-// Right: title row + tagline stacked
 .rhp-wordmark {
   display: flex;
   flex-direction: column;
   gap: 3px;
 }
 
-// "RESIDENT connect" on one line
 .rhp-title {
   display: flex;
   align-items: baseline;
@@ -90,7 +86,7 @@
 }
 
 .rhp-resident {
-  font-size: 12px;
+  font-size: 13px;                      // ↑ was 12px
   font-weight: 700;
   color: var(--white);
   letter-spacing: 2px;
@@ -98,22 +94,21 @@
 }
 
 .rhp-connect {
-  font-size: 14px;
+  font-size: 15px;                      // ↑ was 14px
   font-weight: 400;
-  color: #E05A5A;                     // coral-red matching the logo
+  color: #E05A5A;
   letter-spacing: 0.2px;
   font-style: italic;
 }
 
-// "live life. live it here.®" tagline
 .rhp-tagline {
-  font-size: 8.5px;
+  font-size: 9.5px;                     // ↑ was 8.5px
   color: rgba(255, 255, 255, 0.45);
   font-style: italic;
   letter-spacing: 0.3px;
 
   sup {
-    font-size: 6px;
+    font-size: 7px;                     // ↑ was 6px
     vertical-align: super;
   }
 }
@@ -130,14 +125,14 @@
 }
 
 .user-avatar {
-  width: 40px;
-  height: 40px;
+  width: 42px;                          // ↑ was 40px
+  height: 42px;
   border-radius: 50%;
   background: var(--primary-light);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 14px;
+  font-size: 15px;                      // ↑ was 14px
   font-weight: 800;
   color: var(--white);
   flex-shrink: 0;
@@ -149,7 +144,7 @@
 .user-info { flex: 1; min-width: 0; }
 
 .user-name {
-  font-size: 13.5px;
+  font-size: 14.5px;                    // ↑ was 13.5px
   font-weight: 700;
   color: var(--white);
   line-height: 1.3;
@@ -159,7 +154,7 @@
 }
 
 .user-role {
-  font-size: 10.5px;
+  font-size: 11.5px;                    // ↑ was 10.5px
   color: rgba(255, 255, 255, 0.50);
   margin-top: 2px;
   display: flex;
@@ -168,8 +163,8 @@
 }
 
 .user-role-dot {
-  width: 5px;
-  height: 5px;
+  width: 6px;                           // ↑ was 5px
+  height: 6px;
   border-radius: 50%;
   background: var(--success);
   box-shadow: 0 0 6px var(--success);
@@ -177,7 +172,7 @@
 }
 
 .user-unit {
-  font-size: 11px;
+  font-size: 12px;                      // ↑ was 11px
   color: rgba(255, 255, 255, 0.45);
   margin-top: 2px;
 }
@@ -206,7 +201,7 @@
 }
 
 .nav-section-label {
-  font-size: 9px;
+  font-size: 10px;                      // ↑ was 9px
   font-weight: 700;
   color: rgba(255, 255, 255, 0.30);
   text-transform: uppercase;
@@ -219,13 +214,13 @@
   display: flex;
   align-items: center;
   gap: 11px;
-  padding: 9px 12px;
+  padding: 10px 12px;                   // ↑ was 9px 12px
   border-radius: 12px;
   cursor: pointer;
   transition: all 0.18s ease;
   margin-bottom: 2px;
   color: rgba(255, 255, 255, 0.70);
-  font-size: 13.5px;
+  font-size: 14.5px;                    // ↑ was 13.5px
   font-weight: 500;
   text-decoration: none;
   position: relative;
@@ -257,8 +252,8 @@
 }
 
 .nav-icon {
-  width: 18px;
-  height: 18px;
+  width: 20px;                          // ↑ was 18px
+  height: 20px;
   flex-shrink: 0;
   display: flex;
   align-items: center;
@@ -275,9 +270,9 @@
   margin-left: auto;
   background: rgba(255, 255, 255, 0.20);
   color: var(--white);
-  font-size: 9.5px;
+  font-size: 10.5px;                    // ↑ was 9.5px
   font-weight: 700;
-  padding: 2px 7px;
+  padding: 2px 8px;                     // ↑ was 2px 7px
   border-radius: 100px;
   letter-spacing: 0.3px;
   backdrop-filter: blur(4px);
@@ -300,11 +295,11 @@
   display: flex;
   align-items: center;
   gap: 11px;
-  padding: 9px 12px;
+  padding: 10px 12px;                   // ↑ was 9px 12px
   border-radius: 11px;
   cursor: pointer;
   color: rgba(255, 255, 255, 0.42);
-  font-size: 13px;
+  font-size: 14px;                      // ↑ was 13px
   font-weight: 500;
   transition: all 0.18s;
   width: 100%;
