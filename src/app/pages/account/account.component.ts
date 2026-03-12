@@ -424,7 +424,7 @@ export class AccountComponent implements OnInit {
         ResidentId:          String(this.residentId),
         PaymentOptionTypeId: String(this.payTo)
       },
-      headers: this.rpmHeaders()
+      headers: this.rpHeaders()
     });
   }
 
@@ -437,7 +437,7 @@ export class AccountComponent implements OnInit {
         PaymentOptionTypeId: String(this.payTo),
         accountType:         'CreditCard'
       },
-      headers: this.rpmHeaders()
+      headers: this.rpHeaders()
     });
   }
 
@@ -448,7 +448,7 @@ export class AccountComponent implements OnInit {
         propertyId: String(this.propertyId),
         ledgerType: String(this.payTo)
       },
-      headers: this.rpmHeaders()
+      headers: this.rpHeaders()
     });
   }
 
@@ -527,7 +527,7 @@ export class AccountComponent implements OnInit {
       bankAccountType:     dhangoResponse.ach?.bankAccountType
     };
 
-    return this.http.post<any>(this.platformTokensUrl, payload, { headers: this.rpmHeaders() });
+    return this.http.post<any>(this.platformTokensUrl, payload, { headers: this.rpHeaders() });
   }
 
   private savePlatformCardToken(dhangoResponse: any, accountKey: string) {
@@ -550,13 +550,13 @@ export class AccountComponent implements OnInit {
       routingNumber:       null
     };
 
-    return this.http.post<any>(this.platformTokensUrl, payload, { headers: this.rpmHeaders() });
+    return this.http.post<any>(this.platformTokensUrl, payload, { headers: this.rpHeaders() });
   }
 
   private deleteExistingPlatformToken(tokenId: string) {
     return this.http.delete(
       `${this.platformTokensUrl}/${tokenId}`,
-      { headers: this.rpmHeaders() }
+      { headers: this.rpHeaders() }
     );
   }
 
@@ -570,8 +570,8 @@ export class AccountComponent implements OnInit {
     });
   }
 
-  private rpmHeaders(): HttpHeaders {
-    const token = sessionStorage.getItem('rpmAccessToken') ?? '';
+  private rpHeaders(): HttpHeaders {
+    const token = sessionStorage.getItem('rpAccessToken') ?? '';
     return new HttpHeaders({ 'Authorization': `Bearer ${token}` });
   }
 

@@ -3,7 +3,7 @@ export const environment = {
   production: false,
   apiUrl: 'http://localhost:5000',
 
-  rpm: {
+  rp: {
     resources: {
       properties: 'api/v1/properties',
       paymentHistory: 'api/v1/payments/history',

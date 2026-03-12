@@ -60,7 +60,7 @@
           <td class="amount">{{ formatCurrency(tx.amount) }}</td>
           <td>
             <span class="status-badge" [ngClass]="tx.status">
-              {{ tx.status === 'paid' ? '✓ Paid' : tx.status === 'pending' ? '⏳ Pending' : '✗ Failed' }}
+              {{ tx.status === 'paid' ? '✓ Paid' : tx.status === 'pending' ? '⏳ In Progress' : '✗ Failed' }}
             </span>
           </td>
         </tr>
