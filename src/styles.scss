@@ -62,7 +62,7 @@ body.dark {
   --gray-50:        #0E0E1C;
   --gray-100:       #181828;
   --gray-200:       #2A2A42;
-  --gray-400:       #6868A0;
+  --gray-400:       #9494B8;
   --gray-600:       #A0A0C4;
   --gray-800:       #E2E2EE;
   --shadow-sm:      0 1px 4px  rgba(0, 0, 0, 0.40);
@@ -153,6 +153,17 @@ body.dark {
   .about-title  { color: var(--gray-800) !important; }
   .about-sub    { color: var(--gray-600) !important; }
   .about-version { color: var(--gray-400) !important; }
+
+  // quick action icon chips — pastel/light bg colors are jarring in dark mode
+  .ic-teal  { background: rgba(0, 184, 156, 0.15) !important; }
+  .ic-navy  { background: rgba(86, 83, 161, 0.20) !important; color: var(--primary-lighter) !important; }
+  .ic-green { background: rgba(16, 185, 129, 0.15) !important; }
+  .ic-red   { background: rgba(232, 52, 58, 0.15)  !important; }
+  .ic-gold  { background: rgba(244, 169, 66, 0.15) !important; }
+
+  // payment & dashboard amounts — --navy turns lavender in dark, use bright text
+  .bal-amount, .payment-h, .total-val,
+  .total .s-label, .ap-title, .saved-bank-value { color: var(--gray-800) !important; }
 }
 
 /* ─── Reset ──────────────────────────────────────────────────────────────── */
