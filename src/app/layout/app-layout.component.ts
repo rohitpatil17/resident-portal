@@ -7,6 +7,7 @@ import { filter, map } from 'rxjs/operators';
 import { SidebarComponent } from '../shared/components/sidebar/sidebar.component';
 import { TopbarComponent } from '../shared/components/topbar/topbar.component';
 import { ChatbotComponent } from '../shared/components/chatbot/chatbot.component';
+import { ThemeService } from '../core/services/theme.service';
 
 @Component({
   selector: 'app-layout',
@@ -36,6 +37,20 @@ import { ChatbotComponent } from '../shared/components/chatbot/chatbot.component
           </div>
           <div class="topbar-right">
             <span class="topbar-date">{{ today }}</span>
+            <button class="theme-btn" (click)="theme.toggle()" [title]="theme.isDark ? 'Switch to light mode' : 'Switch to dark mode'">
+              <!-- moon -->
+              <svg *ngIf="!theme.isDark" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+              </svg>
+              <!-- sun -->
+              <svg *ngIf="theme.isDark" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="5"/>
+                <line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/>
+                <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+                <line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/>
+                <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+              </svg>
+            </button>
             <button class="notif-btn">
               <div class="notif-dot"></div>
               <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -70,6 +85,7 @@ import { ChatbotComponent } from '../shared/components/chatbot/chatbot.component
       flex: 1; display: flex; flex-direction: column;
       min-width: 0;
       transition: margin-left 0.3s;
+      background: var(--gray-50);
     }
 
     .topbar {
@@ -93,6 +109,14 @@ import { ChatbotComponent } from '../shared/components/chatbot/chatbot.component
       align-items: center; justify-content: center;
       border-radius: 8px; transition: background 0.2s;
       &:hover { background: #F0F2F8; }
+    }
+
+    .theme-btn {
+      width: 36px; height: 36px; border-radius: 10px;
+      border: 2px solid #E2E6F0; background: white;
+      cursor: pointer; display: flex; align-items: center; justify-content: center;
+      color: #94A3B8; transition: all .2s;
+      &:hover { border-color: #7B7FC4; color: #7B7FC4; }
     }
 
     .notif-btn {
@@ -146,7 +170,7 @@ export class AppLayoutComponent {
     '/faq':       'FAQ',
   };
 
-  constructor(private router: Router) {
+  constructor(private router: Router, public theme: ThemeService) {
     this.router.events.pipe(
       filter(e => e instanceof NavigationEnd),
       map((e: any) => this.titleMap[e.urlAfterRedirects] || 'Dashboard')

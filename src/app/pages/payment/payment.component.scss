@@ -3,7 +3,7 @@
 .payment-layout { display:grid; grid-template-columns:1fr 370px; gap:22px; }
 
 .pay-balance {
-  background:white; border-radius:14px; padding:24px;       // ↑ was 22px
+  background:var(--surface); border-radius:14px; padding:24px;       // ↑ was 22px
   border:2px solid var(--gray-200); box-shadow:var(--shadow-sm); margin-bottom:18px;
 }
 .balance-row { display:flex; justify-content:space-between; flex-wrap:wrap; gap:20px; }

@@ -2,6 +2,7 @@ import { Component, ElementRef, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ChatService, ChatMessage } from '../../../core/services/chat.service';
+import { AuthService } from '../../../core/services/auth.service';
 
 @Component({
   selector: 'app-chatbot',
@@ -23,7 +24,7 @@ import { ChatService, ChatMessage } from '../../../core/services/chat.service';
 
       <div class="chat-messages" #messagesContainer>
         <div class="welcome" *ngIf="messages.length === 0">
-          <p>Hi! I'm your resident portal assistant. Ask me anything about your billing, payments, or account.</p>
+          <p>Hi{{ firstName ? ' ' + firstName : '' }}! I'm MAI, your resident portal assistant. Ask me anything about your billing, payments, or account.</p>
           <div class="quick-replies">
             <button *ngFor="let q of quickReplies" (click)="sendQuick(q)">{{ q }}</button>
           </div>
@@ -56,10 +57,18 @@ import { ChatService, ChatMessage } from '../../../core/services/chat.service';
 
     <!-- floating bubble -->
     <button class="chat-bubble" (click)="toggle()" [class.open]="isOpen">
-      <svg *ngIf="!isOpen" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
-      </svg>
-      <svg *ngIf="isOpen" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+      <ng-container *ngIf="!isOpen">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="12" y1="7" x2="12" y2="4"/>
+          <circle cx="12" cy="3.2" r="1" fill="currentColor" stroke="none"/>
+          <rect x="3" y="7" width="18" height="13" rx="2.5"/>
+          <circle cx="9" cy="13" r="1.2" fill="currentColor" stroke="none"/>
+          <circle cx="15" cy="13" r="1.2" fill="currentColor" stroke="none"/>
+          <path d="M9 16.5q3 1.5 6 0" stroke-width="1.6"/>
+        </svg>
+        <span class="bubble-label">MAI</span>
+      </ng-container>
+      <svg *ngIf="isOpen" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
         <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
       </svg>
     </button>
@@ -73,15 +82,21 @@ import { ChatService, ChatMessage } from '../../../core/services/chat.service';
     }
 
     .chat-bubble {
-      width: 54px; height: 54px;
+      width: 60px; height: 60px;
       border-radius: 50%;
-      background: #5653A1;
+      background: linear-gradient(145deg, #6B68C0 0%, #5653A1 100%);
       border: none; cursor: pointer;
-      display: flex; align-items: center; justify-content: center;
+      display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px;
       color: white;
-      box-shadow: 0 4px 16px rgba(86,83,161,0.4);
-      transition: transform 0.2s, background 0.2s;
-      &:hover { transform: scale(1.08); background: #4a4790; }
+      box-shadow: 0 4px 20px rgba(86,83,161,0.45);
+      transition: transform 0.2s, box-shadow 0.2s;
+      &:hover { transform: scale(1.08); box-shadow: 0 6px 24px rgba(86,83,161,0.6); }
+    }
+
+    .bubble-label {
+      font-size: 8.5px; font-weight: 800;
+      letter-spacing: 1.5px;
+      opacity: 0.9;
     }
 
     .chat-window {
@@ -216,6 +231,7 @@ import { ChatService, ChatMessage } from '../../../core/services/chat.service';
 })
 export class ChatbotComponent {
   @ViewChild('messagesContainer') private messagesContainer!: ElementRef;
+  @ViewChild('inputEl') private inputEl!: ElementRef;
 
   isOpen = false;
   input = '';
@@ -228,7 +244,14 @@ export class ChatbotComponent {
     'When is my next due date?'
   ];
 
-  constructor(private chatService: ChatService) {}
+  constructor(
+    private chatService: ChatService,
+    private auth: AuthService
+  ) {}
+
+  get firstName(): string {
+    return this.auth.currentUser?.name?.split(' ')[0] ?? '';
+  }
 
   toggle(): void {
     this.isOpen = !this.isOpen;
@@ -253,13 +276,19 @@ export class ChatbotComponent {
         this.messages.push({ role: 'assistant', content: res.reply });
         this.loading = false;
         this.scrollToBottom();
+        this.focusInput();
       },
       error: () => {
         this.messages.push({ role: 'assistant', content: 'Sorry, something went wrong. Please try again.' });
         this.loading = false;
         this.scrollToBottom();
+        this.focusInput();
       }
     });
+  }
+
+  private focusInput(): void {
+    setTimeout(() => this.inputEl?.nativeElement?.focus(), 50);
   }
 
   private scrollToBottom(): void {

@@ -49,6 +49,110 @@
   --shadow-primary: 0 6px 24px rgba(86, 83, 161, 0.40);
 
   --radius: 16px;
+
+  /* ── Surface (card/panel bg — swaps in dark mode) ───────────────────────── */
+  --surface:        #FFFFFF;
+  --surface-raised: #FFFFFF;
+}
+
+/* ─── Dark Mode ──────────────────────────────────────────────────────────── */
+body.dark {
+  --surface:        #181828;
+  --surface-raised: #1E1E32;
+  --gray-50:        #0E0E1C;
+  --gray-100:       #181828;
+  --gray-200:       #2A2A42;
+  --gray-400:       #6868A0;
+  --gray-600:       #A0A0C4;
+  --gray-800:       #E2E2EE;
+  --shadow-sm:      0 1px 4px  rgba(0, 0, 0, 0.40);
+  --shadow-md:      0 4px 24px rgba(0, 0, 0, 0.55);
+  --navy:           #A8A8D0;
+  --navy-mid:       #9090C0;
+  --navy-light:     #8080B8;
+
+  background: var(--gray-50);
+  color: var(--gray-800);
+
+  // card & shared surfaces
+  .card { background: var(--surface) !important; border-color: var(--gray-200) !important; }
+
+  // topbar (component-encapsulated, needs override)
+  .topbar {
+    background: var(--surface) !important;
+    border-bottom-color: var(--gray-200) !important;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.4) !important;
+  }
+  .topbar-title { color: var(--gray-800) !important; }
+  .topbar-date  { color: var(--gray-400) !important; }
+  .theme-btn    { background: var(--surface) !important; border-color: var(--gray-200) !important; color: var(--gray-400) !important; }
+  .notif-btn    { background: var(--surface) !important; border-color: var(--gray-200) !important; color: var(--gray-400) !important; }
+
+  // buttons
+  .btn-outline {
+    background: var(--surface) !important;
+    border-color: var(--gray-200) !important;
+    color: var(--gray-800) !important;
+  }
+  .pay-balance { background: var(--surface) !important; border-color: var(--gray-200) !important; }
+  .settings-card { background: var(--surface) !important; border-color: var(--gray-200) !important; }
+  .modal-panel { background: var(--surface) !important; }
+
+  // form inputs — browser defaults to white, override to dark surface
+  input:not([type="radio"]):not([type="checkbox"]),
+  select,
+  textarea {
+    background: var(--surface) !important;
+    color: var(--gray-800) !important;
+    border-color: var(--gray-200) !important;
+    color-scheme: dark;
+  }
+
+  // payment buttons — primary nav is now light in dark mode, use brand color instead
+  .pay-btn.primary   { background: var(--primary) !important; color: #fff !important; }
+  .pay-btn.secondary { background: var(--surface) !important; color: var(--gray-800) !important; }
+
+  // save/cancel buttons — dark navy bg doesn't work in dark mode
+  .btn-save   { background: var(--primary) !important; color: #fff !important; }
+  .btn-cancel { background: var(--surface) !important; color: var(--gray-800) !important; border-color: var(--gray-200) !important; }
+
+  // feedback message backgrounds
+  .modal-error   { background: rgba(232, 52, 58,  0.14) !important; }
+  .modal-success { background: rgba(16,  185, 129, 0.12) !important; }
+
+  // account section item borders
+  .section-item { border-bottom-color: var(--gray-200) !important; }
+
+  // billing table borders & text
+  .billing-table th { border-bottom-color: var(--gray-200) !important; }
+  .billing-table td { border-bottom-color: var(--gray-100) !important; }
+  .bill-period { color: var(--primary-lighter) !important; }
+  .billing-table .desc { color: var(--gray-600) !important; }
+
+  // account page — description text brighter, view button border more visible
+  .row-desc, .page-subtitle { color: var(--gray-600) !important; }
+  .btn-view { border-color: var(--gray-400) !important; color: var(--gray-600) !important; }
+
+  // chatbot window — add border so it's distinguishable from page bg
+  .chat-window {
+    background: var(--surface-raised) !important;
+    border: 1px solid var(--gray-200) !important;
+    box-shadow: 0 8px 40px rgba(0, 0, 0, 0.55) !important;
+  }
+  .chat-messages { background: var(--gray-50) !important; }
+  .chat-input-area {
+    border-top-color: var(--gray-200) !important;
+    background: var(--surface-raised) !important;
+    input { background: var(--gray-100) !important; color: var(--gray-800) !important; border-color: var(--gray-200) !important; }
+  }
+  .message.assistant .bubble { background: var(--gray-100) !important; color: var(--gray-800) !important; }
+  .welcome p { color: var(--gray-600) !important; }
+
+  // about modal
+  .about-modal { background: var(--surface-raised) !important; border: 1px solid var(--gray-200) !important; }
+  .about-title  { color: var(--gray-800) !important; }
+  .about-sub    { color: var(--gray-600) !important; }
+  .about-version { color: var(--gray-400) !important; }
 }
 
 /* ─── Reset ──────────────────────────────────────────────────────────────── */
@@ -83,7 +187,7 @@ h1, h2, h3, h4, h5 { letter-spacing: -0.3px; }
 
 /* ─── Shared Card ────────────────────────────────────────────────────────── */
 .card {
-  background: var(--white);
+  background: var(--surface);
   border-radius: var(--radius);
   padding: 22px;
   box-shadow: var(--shadow-sm);

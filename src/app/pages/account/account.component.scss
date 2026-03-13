@@ -45,7 +45,7 @@
   padding: 8px 22px;          // ↑ was 7px 19px
   border-radius: 9px;
   border: 1.5px solid var(--gray-200);
-  background: var(--white);
+  background: var(--surface);
   font-family: 'DM Sans', sans-serif;
   font-size: 14px; font-weight: 600;  // ↑ was 13px
   color: var(--navy); cursor: pointer; transition: all .18s;
@@ -69,7 +69,7 @@
 }
 
 .modal-panel {
-  background: var(--white);
+  background: var(--surface);
   border-radius: var(--radius);
   padding: 36px 32px 28px;
   width: 100%;
@@ -127,7 +127,7 @@
   }
 
   &--outline {
-    background: var(--white);
+    background: var(--surface);
     color: var(--purple);
     border: 1.5px solid var(--gray-200);
     &:hover { border-color: var(--purple); }
@@ -281,7 +281,7 @@
   padding: 12px 30px;         // ↑ was 11px 28px
   border-radius: 10px;
   border: 1.5px solid var(--gray-200);
-  background: var(--white);
+  background: var(--surface);
   font-family: 'DM Sans', sans-serif;
   font-size: 15px; font-weight: 600;  // ↑ was 14px
   color: var(--navy); cursor: pointer; transition: all 0.18s;
