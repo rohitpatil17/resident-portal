@@ -14,11 +14,13 @@
         </div>
 
         <!-- due date + context inline -->
-        <div class="balance-meta">
+        <div class="balance-meta" *ngIf="hasDueDate">
           <span>Due by</span>
           <strong>{{ balance.dueDate }}</strong>
-          <span class="meta-sep"></span>
-          <span>{{ dueDateContext }}</span>
+          <ng-container *ngIf="dueDateContext">
+            <span class="meta-sep"></span>
+            <span>{{ dueDateContext }}</span>
+          </ng-container>
         </div>
 
         <!-- inline chip row — replaces stacked bd-item blocks -->

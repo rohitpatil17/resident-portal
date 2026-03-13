@@ -51,13 +51,32 @@ import { ThemeService } from '../core/services/theme.service';
                 <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
               </svg>
             </button>
-            <button class="notif-btn">
-              <div class="notif-dot"></div>
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
-                <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
-              </svg>
-            </button>
+            <div class="notif-wrap">
+              <button class="notif-btn" (click)="toggleNotifs($event)">
+                <div class="notif-dot" *ngIf="hasUnread"></div>
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+                  <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+                </svg>
+              </button>
+              <div class="notif-dropdown" *ngIf="showNotifs" (click)="$event.stopPropagation()">
+                <div class="notif-header">
+                  <span>Notifications</span>
+                  <button class="notif-clear" (click)="clearAll()">Mark all read</button>
+                </div>
+                <div class="notif-item" *ngFor="let n of notifications" [class.unread]="n.unread">
+                  <div class="notif-icon" [class]="'ni-' + n.type">
+                    <svg *ngIf="n.type === 'alert'" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                    <svg *ngIf="n.type === 'info'" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                    <svg *ngIf="n.type === 'success'" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                  </div>
+                  <div class="notif-body">
+                    <div class="notif-text">{{ n.text }}</div>
+                    <div class="notif-time">{{ n.time }}</div>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </header>
 
@@ -119,6 +138,8 @@ import { ThemeService } from '../core/services/theme.service';
       &:hover { border-color: #7B7FC4; color: #7B7FC4; }
     }
 
+    .notif-wrap { position: relative; }
+
     .notif-btn {
       width: 36px; height: 36px; border-radius: 10px;
       border: 2px solid #E2E6F0; background: white;
@@ -132,6 +153,49 @@ import { ThemeService } from '../core/services/theme.service';
       width: 7px; height: 7px; border-radius: 50%;
       background: #E8343A; border: 2px solid white;
     }
+
+    .notif-dropdown {
+      position: absolute; top: calc(100% + 10px); right: 0;
+      width: 300px; background: white;
+      border-radius: 14px; border: 1px solid #E2E6F0;
+      box-shadow: 0 8px 32px rgba(26,35,64,0.14);
+      z-index: 200; overflow: hidden;
+    }
+
+    .notif-header {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 14px 16px 10px;
+      font-size: 13px; font-weight: 700; color: #1a2340;
+      border-bottom: 1px solid #E2E6F0;
+    }
+
+    .notif-clear {
+      font-size: 11px; color: #5653A1; font-weight: 600;
+      background: none; border: none; cursor: pointer;
+      font-family: 'DM Sans', sans-serif;
+      &:hover { text-decoration: underline; }
+    }
+
+    .notif-item {
+      display: flex; align-items: flex-start; gap: 10px;
+      padding: 12px 16px; border-bottom: 1px solid #F1F3F9;
+      transition: background .15s;
+      &:last-child { border-bottom: none; }
+      &:hover { background: #F8F9FC; }
+      &.unread { background: rgba(86,83,161,0.04); }
+    }
+
+    .notif-icon {
+      width: 28px; height: 28px; border-radius: 8px; flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+      &.ni-alert   { background: rgba(232,52,58,.1);   color: #E8343A; }
+      &.ni-info    { background: rgba(0,184,156,.1);   color: #00B89C; }
+      &.ni-success { background: rgba(16,185,129,.1);  color: #10B981; }
+    }
+
+    .notif-body { flex: 1; }
+    .notif-text { font-size: 12.5px; color: #1a2340; line-height: 1.45; font-weight: 500; }
+    .notif-time { font-size: 11px; color: #94A3B8; margin-top: 3px; }
 
     .content-area { padding: 26px 28px; flex: 1; }
 
@@ -159,7 +223,29 @@ import { ThemeService } from '../core/services/theme.service';
 export class AppLayoutComponent {
   pageTitle = 'Dashboard';
   sidebarOpen = false;
+  showNotifs = false;
   today = new Intl.DateTimeFormat('en-US', { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' }).format(new Date());
+
+  notifications = [
+    { type: 'alert',   text: 'Your payment of $1,250.00 is due in 3 days.', time: 'Today', unread: true },
+    { type: 'info',    text: 'Pool closure scheduled for Feb 22–24 for maintenance.', time: 'Feb 15', unread: true },
+    { type: 'info',    text: 'New recycling schedule starts in March. Check the notice board.', time: 'Feb 12', unread: false },
+    { type: 'success', text: 'Your payment of $1,250.00 was received successfully.', time: 'Feb 4', unread: false },
+    { type: 'info',    text: 'Town hall meeting — Feb 28 @ 6PM in the community room.', time: 'Feb 1', unread: false },
+  ];
+
+  get hasUnread(): boolean {
+    return this.notifications.some(n => n.unread);
+  }
+
+  toggleNotifs(e: Event): void {
+    e.stopPropagation();
+    this.showNotifs = !this.showNotifs;
+  }
+
+  clearAll(): void {
+    this.notifications.forEach(n => n.unread = false);
+  }
 
   private titleMap: Record<string, string> = {
     '/dashboard': 'Dashboard',
@@ -186,5 +272,10 @@ export class AppLayoutComponent {
   @HostListener('window:resize')
   onResize(): void {
     if (window.innerWidth > 768) this.sidebarOpen = false;
+  }
+
+  @HostListener('document:click')
+  onDocClick(): void {
+    this.showNotifs = false;
   }
 }

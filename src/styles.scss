@@ -88,6 +88,12 @@ body.dark {
   .hamburger    { color: var(--gray-800) !important; }
   .theme-btn    { background: var(--surface) !important; border-color: var(--gray-200) !important; color: var(--gray-400) !important; }
   .notif-btn    { background: var(--surface) !important; border-color: var(--gray-200) !important; color: var(--gray-400) !important; }
+  .notif-dot    { border-color: var(--surface) !important; }
+  .notif-dropdown { background: var(--surface-raised) !important; border-color: var(--gray-200) !important; }
+  .notif-header { color: var(--gray-800) !important; border-bottom-color: var(--gray-200) !important; }
+  .notif-item   { border-bottom-color: var(--gray-200) !important; &:hover { background: var(--gray-100) !important; } &.unread { background: rgba(86,83,161,0.08) !important; } }
+  .notif-text   { color: var(--gray-800) !important; }
+  .notif-time   { color: var(--gray-400) !important; }
 
   // buttons
   .btn-outline {
@@ -109,11 +115,11 @@ body.dark {
     color-scheme: dark;
   }
 
-  // payment buttons — primary nav is now light in dark mode, use brand color instead
-  .pay-btn.primary   { background: var(--primary) !important; color: #fff !important; }
-  .pay-btn.secondary { background: var(--surface) !important; color: var(--gray-800) !important; }
+  // any button using --navy as background becomes light lavender in dark mode — override all solid variants
+  .pay-btn.primary, .pay-btn--solid { background: var(--primary) !important; color: #fff !important; }
+  .pay-btn.secondary, .pay-btn--outline { background: var(--surface) !important; color: var(--gray-600) !important; border-color: var(--gray-200) !important; }
 
-  // save/cancel buttons — dark navy bg doesn't work in dark mode
+  // save/cancel buttons — same issue
   .btn-save   { background: var(--primary) !important; color: #fff !important; }
   .btn-cancel { background: var(--surface) !important; color: var(--gray-800) !important; border-color: var(--gray-200) !important; }
 
@@ -162,9 +168,14 @@ body.dark {
   .ic-red   { background: rgba(232, 52, 58, 0.15)  !important; }
   .ic-gold  { background: rgba(244, 169, 66, 0.15) !important; }
 
-  // payment & dashboard amounts — --navy turns lavender in dark, use bright text
-  .bal-amount, .payment-h, .total-val,
-  .total .s-label, .ap-title, .saved-bank-value { color: var(--gray-800) !important; }
+  // all --navy text turns lavender in dark mode — override everything to near-white
+  .bal-amount, .payment-h, .total-val, .total .s-label,
+  .ap-title, .saved-bank-value,
+  .page-title, .modal-title, .payment-summary h3,
+  .s-title, .section-title,
+  .field-input, .field-select, .field-link,
+  .select-wrapper::after,
+  .btn-cancel, .btn-view { color: var(--gray-800) !important; }
 }
 
 /* ─── Reset ──────────────────────────────────────────────────────────────── */

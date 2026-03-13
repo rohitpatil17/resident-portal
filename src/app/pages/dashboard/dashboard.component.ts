@@ -46,18 +46,24 @@ export class DashboardComponent implements OnInit {
    * Negative = overdue, 0 = due today.
    */
   get daysUntilDue(): number {
-    if (!this.balance?.dueDate) return 0;
-    const due  = new Date(this.balance.dueDate).setHours(0, 0, 0, 0);
+    const raw = this.balance?.dueDate;
+    if (!raw || raw === '—') return NaN;
+    const due = new Date(raw).setHours(0, 0, 0, 0);
+    if (isNaN(due)) return NaN;
     const today = new Date().setHours(0, 0, 0, 0);
     return Math.round((due - today) / 86_400_000);
   }
 
-  /** Human-readable label shown next to the due date. */
   get dueDateContext(): string {
     const d = this.daysUntilDue;
-    if (d < 0)  return `${Math.abs(d)} day${Math.abs(d) !== 1 ? 's' : ''} overdue`;
+    if (isNaN(d)) return '';
+    if (d < 0)   return `${Math.abs(d)} day${Math.abs(d) !== 1 ? 's' : ''} overdue`;
     if (d === 0) return 'Due today';
     if (d === 1) return '1 day remaining';
     return `${d} days remaining`;
+  }
+
+  get hasDueDate(): boolean {
+    return !!this.balance?.dueDate && this.balance.dueDate !== '—';
   }
 }
