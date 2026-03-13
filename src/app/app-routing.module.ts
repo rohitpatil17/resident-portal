@@ -25,8 +25,11 @@ export const routes: Routes = [
       { path: 'payment',   component: PaymentComponent },
       { path: 'billing',   component: BillingComponent },
       { path: 'account',   component: AccountComponent },
-      { path: 'documents', component: ComingSoonComponent },
-      { path: 'faq',       component: ComingSoonComponent },
+      { path: 'faq',      component: ComingSoonComponent },
+      { path: 'terms',    component: ComingSoonComponent },
+      { path: 'privacy',  component: ComingSoonComponent },
+      { path: 'browsers', component: ComingSoonComponent },
+      { path: 'about',    component: ComingSoonComponent },
     ]
   },
   { path: '**', redirectTo: 'login' }

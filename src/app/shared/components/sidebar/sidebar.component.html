@@ -83,7 +83,7 @@
           <polyline points="10 9 9 9 8 9"/>
         </svg>
       </span>
-      <span class="nav-label">E-Billing &amp; History</span>
+      <span class="nav-label">E-Billing and Payment History</span>
     </a>
 
     <!-- My Account -->
@@ -100,20 +100,8 @@
 
     <div class="nav-section-label">Resources</div>
 
-    <!-- Documents -->
-    <a class="nav-item" routerLink="/documents" routerLinkActive="active" (click)="close()">
-      <span class="nav-icon">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
-             stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M13 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V9z"/>
-          <polyline points="13 2 13 9 20 9"/>
-        </svg>
-      </span>
-      <span class="nav-label">Documents</span>
-    </a>
-
     <!-- FAQ -->
-    <a class="nav-item" routerLink="/faq" routerLinkActive="active" (click)="close()">
+    <a class="nav-item" (click)="openDoc('assets/docs/faqs.pdf'); close()">
       <span class="nav-icon">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -122,7 +110,58 @@
           <line x1="12" y1="17" x2="12.01" y2="17"/>
         </svg>
       </span>
-      <span class="nav-label">FAQ</span>
+      <span class="nav-label">FAQs</span>
+    </a>
+
+    <!-- Terms of Service -->
+    <a class="nav-item" (click)="openDoc('assets/docs/terms-of-service.pdf'); close()">
+      <span class="nav-icon">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
+             stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/>
+          <polyline points="14 2 14 8 20 8"/>
+          <line x1="16" y1="13" x2="8" y2="13"/>
+          <line x1="16" y1="17" x2="8" y2="17"/>
+        </svg>
+      </span>
+      <span class="nav-label">Terms of Service</span>
+    </a>
+
+    <!-- Privacy Policy -->
+    <a class="nav-item" (click)="openDoc('assets/docs/privacy-policy.pdf'); close()">
+      <span class="nav-icon">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
+             stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+        </svg>
+      </span>
+      <span class="nav-label">Privacy Policy</span>
+    </a>
+
+    <!-- Supported Browsers -->
+    <a class="nav-item" (click)="openDoc('assets/docs/supported-browsers.pdf'); close()">
+      <span class="nav-icon">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
+             stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"/>
+          <line x1="2" y1="12" x2="22" y2="12"/>
+          <path d="M12 2a15.3 15.3 0 010 20M12 2a15.3 15.3 0 000 20"/>
+        </svg>
+      </span>
+      <span class="nav-label">Supported Browsers and OS</span>
+    </a>
+
+    <!-- About -->
+    <a class="nav-item" (click)="openAbout()">
+      <span class="nav-icon">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
+             stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"/>
+          <line x1="12" y1="8" x2="12" y2="12"/>
+          <line x1="12" y1="16" x2="12.01" y2="16"/>
+        </svg>
+      </span>
+      <span class="nav-label">About</span>
     </a>
 
   </nav>
@@ -141,3 +180,13 @@
   </div>
 
 </aside>
+
+<!-- About Modal -->
+<div class="about-backdrop" *ngIf="showAbout" (click)="closeAbout()">
+  <div class="about-modal" (click)="$event.stopPropagation()">
+    <div class="about-title">RHP Resident Connect</div>
+    <div class="about-sub">Powered by National Portal Systems</div>
+    <div class="about-version">Version 3.1.5</div>
+    <button class="about-close-btn" (click)="closeAbout()">Close</button>
+  </div>
+</div>

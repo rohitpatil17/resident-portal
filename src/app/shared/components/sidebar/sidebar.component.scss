@@ -335,6 +335,60 @@
   }
 }
 
+// ── ABOUT MODAL ──────────────────────────────────────────────────────────────
+.about-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  z-index: 500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.about-modal {
+  background: #fff;
+  border-radius: 10px;
+  padding: 36px 40px 28px;
+  min-width: 300px;
+  text-align: center;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.22);
+}
+
+.about-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: #1a2560;
+  margin-bottom: 10px;
+}
+
+.about-sub {
+  font-size: 14px;
+  color: #444;
+  margin-bottom: 6px;
+}
+
+.about-version {
+  font-size: 13px;
+  color: #888;
+  margin-bottom: 28px;
+}
+
+.about-close-btn {
+  background: #1a2560;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 9px 32px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: 'DM Sans', sans-serif;
+  transition: background 0.18s;
+
+  &:hover { background: #2e3e8a; }
+}
+
 // ── RESPONSIVE ───────────────────────────────────────────────────────────────
 @media (max-width: 768px) {
   .sidebar {

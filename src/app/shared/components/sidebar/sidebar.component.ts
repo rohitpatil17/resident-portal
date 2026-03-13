@@ -38,10 +38,15 @@ export class SidebarComponent {
     { label: 'FAQ',       route: '/faq',       icon: 'info' },
   ];
 
+  showAbout = false;
+
   constructor(private auth: AuthService) {}
 
-  logout(): void { this.auth.logout(); }
-  close():  void { this.closeSidebar.emit(); }
+  logout():            void { this.auth.logout(); }
+  close():             void { this.closeSidebar.emit(); }
+  openDoc(path: string): void { window.open(path, '_blank'); }
+  openAbout():         void { this.showAbout = true; }
+  closeAbout():        void { this.showAbout = false; }
 
   getIcon(name: string): string {
     const icons: Record<string, string> = {

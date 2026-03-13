@@ -37,7 +37,6 @@ export interface BillingStatement {
   id: string;
   period: string;
   description: string;
-  amount: number;
   status: 'paid' | 'pending';
 }
 

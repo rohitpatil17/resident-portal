@@ -16,7 +16,6 @@
         <tr>
           <th>Period</th>
           <th>Description</th>
-          <th>Amount</th>
           <th>Status</th>
           <th class="text-right">Actions</th>
         </tr>
@@ -25,7 +24,6 @@
         <tr *ngFor="let s of statements">
           <td><span class="bill-period">{{ s.period }}</span></td>
           <td class="desc">{{ s.description }}</td>
-          <td class="amount">{{ formatCurrency(s.amount) }}</td>
           <td>
             <span class="status-badge" [ngClass]="s.status">
               {{ s.status === 'paid' ? '✓ Paid' : '⏳ Pending' }}
@@ -50,6 +48,7 @@
           <th>Method</th>
           <th>Amount</th>
           <th>Status</th>
+          <th class="text-right">Actions</th>
         </tr>
       </thead>
       <tbody>
@@ -62,6 +61,10 @@
             <span class="status-badge" [ngClass]="tx.status">
               {{ tx.status === 'paid' ? '✓ Paid' : tx.status === 'pending' ? '⏳ In Progress' : '✗ Failed' }}
             </span>
+          </td>
+          <td class="text-right">
+            <button class="bill-btn outline" (click)="viewTransaction(tx.id)">View</button>
+            <button class="bill-btn filled" (click)="downloadTransaction(tx.id)">Download</button>
           </td>
         </tr>
       </tbody>
@@ -78,4 +81,15 @@
     </div>
   </div>
 
+</div>
+
+<!-- PDF Preview Modal -->
+<div class="pdf-modal-backdrop" *ngIf="previewUrl" (click)="closePreview()">
+  <div class="pdf-modal" (click)="$event.stopPropagation()">
+    <div class="pdf-modal-header">
+      <span>Preview</span>
+      <button class="pdf-close" (click)="closePreview()">✕</button>
+    </div>
+    <iframe [src]="previewUrl" class="pdf-frame"></iframe>
+  </div>
 </div>
