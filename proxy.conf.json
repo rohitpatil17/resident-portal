@@ -1,0 +1,9 @@
+{
+  "/dhango/*": {
+    "target": "https://api.dhangodemo.com",
+    "secure": true,
+    "changeOrigin": true,
+    "pathRewrite": { "^/dhango": "" },
+    "logLevel": "debug"
+  }
+}

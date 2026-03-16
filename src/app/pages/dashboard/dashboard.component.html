@@ -144,10 +144,11 @@
             <div class="tx-name">{{ tx.description }}</div>
             <div class="tx-date">{{ tx.date }}</div>
           </div>
-          <div class="tx-amount"
-               [class.paid]="tx.status === 'paid'"
-               [class.pending]="tx.status !== 'paid'">
-            {{ tx.status === 'paid' ? '−' + formatCurrency(tx.amount) : 'Pending' }}
+          <div class="tx-right">
+            <div class="tx-amount" [class.paid]="tx.status === 'paid'" [class.pending]="tx.status !== 'paid'">
+              {{ tx.status === 'paid' ? '−' : '' }}{{ formatCurrency(tx.amount) }}
+            </div>
+            <div class="tx-badge" *ngIf="tx.status !== 'paid'">{{ tx.status | titlecase }}</div>
           </div>
         </div>
       </div>

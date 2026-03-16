@@ -29,8 +29,8 @@
 
 .pay-methods { display:flex; flex-direction:column; gap:11px; }
 .pay-btn {
-  width:100%; padding:16px 20px; border:none; border-radius:12px;     // ↑ was 15px 19px
-  font-family:'DM Sans',sans-serif; font-size:15px; font-weight:700;  // ↑ was 14px
+  width:100%; padding:16px 20px; border:none; border-radius:12px;
+  font-family:'DM Sans',sans-serif; font-size:15px; font-weight:700;
   cursor:pointer; display:flex; align-items:center; gap:12px; transition:all .2s;
   &.primary { background:var(--navy); color:white; box-shadow:0 4px 12px rgba(26,35,64,.2);
     &:hover { background:var(--navy-light); transform:translateY(-1px); }
@@ -38,6 +38,24 @@
   &.secondary { background:white; color:var(--navy); border:2px solid var(--gray-200); box-shadow:var(--shadow-sm);
     &:hover { border-color:var(--purple); color:var(--purple); }
   }
+  // modal BEM modifiers
+  &--solid {
+    display:block; text-align:center; background:var(--navy); color:white;
+    border:none; margin-bottom:12px;
+    &:hover { background:var(--navy-light); }
+    &:disabled { opacity:.6; cursor:not-allowed; }
+  }
+  &--outline {
+    display:block; text-align:center; background:var(--surface); color:var(--purple);
+    border:1.5px solid var(--gray-200); margin-bottom:0;
+    &:hover { border-color:var(--purple); }
+    &:disabled { opacity:.6; cursor:not-allowed; }
+  }
+}
+
+.note-text {
+  margin-top:14px; font-size:12px; color:var(--gray-400); line-height:1.6;
+  padding-top:12px; border-top:1px solid var(--gray-100);
 }
 
 .payment-summary {

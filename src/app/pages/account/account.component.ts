@@ -4,9 +4,11 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { ActivatedRoute, Router } from '@angular/router';
 import { switchMap, catchError, of } from 'rxjs';
 import { ResidentService } from '../../core/services/resident.service';
 import { AuthService } from '../../core/services/auth.service';
+import { PaymentNavService } from '../../core/services/payment-nav.service';
 import { AccountSection } from '../../core/models/resident.model';
 import { environment } from '../../../environments/environment';
 
@@ -114,10 +116,15 @@ export class AccountComponent implements OnInit {
     return `${this.userId}-${this.companyId}-${this.residentId}`;
   }
 
+  private returnToPayment = false;
+
   constructor(
     private residentService: ResidentService,
     private authService:     AuthService,
-    private http:            HttpClient
+    private http:            HttpClient,
+    private route:      ActivatedRoute,
+    private router:     Router,
+    private paymentNav: PaymentNavService
   ) {}
 
   ngOnInit(): void {
@@ -126,6 +133,19 @@ export class AccountComponent implements OnInit {
     if (user) {
       this.loginForm.username = user.name;
       this.loginForm.email    = user.email;
+    }
+    const openPayment = this.route.snapshot.queryParamMap.get('openPayment');
+    if (openPayment === 'bank' || openPayment === 'card') {
+      this.returnToPayment = true;
+      this.openPaymentMenu();
+      // after tokens load, jump straight to the relevant form
+      const interval = setInterval(() => {
+        if (!this.isPaymentLoading) {
+          clearInterval(interval);
+          if (openPayment === 'bank') this.goToBank();
+          else                        this.goToCard();
+        }
+      }, 100);
     }
   }
 
@@ -228,7 +248,24 @@ export class AccountComponent implements OnInit {
     this.paymentView = (bank || card) ? 'details' : 'menu';
   }
 
-  closePaymentModal(): void { this.paymentView = 'none'; }
+  closePaymentModal(): void {
+    this.paymentView = 'none';
+    if (this.returnToPayment) {
+      this.paymentNav.openModalOnReturn = true;
+      this.router.navigate(['/payment']);
+    }
+  }
+
+  // cancel from bank/card form — skip menu and go back if came from payment page
+  cancelPaymentForm(): void {
+    if (this.returnToPayment) {
+      this.paymentView = 'none';
+      this.paymentNav.openModalOnReturn = true;
+      this.router.navigate(['/payment']);
+    } else {
+      this.openPaymentMenu();
+    }
+  }
 
   goToBank(): void {
     this.bankError   = '';

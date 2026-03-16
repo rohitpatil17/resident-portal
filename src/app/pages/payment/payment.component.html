@@ -42,7 +42,7 @@
             <rect x="2" y="5" width="20" height="14" rx="2"/>
             <path d="M2 10h20"/>
           </svg>
-          One Time Payment for Site 29
+          One Time Payment for Site {{ auth.currentUser?.unit }}
         </button>
       </div>
     </div>
@@ -78,6 +78,57 @@
 
       <div class="security-note">
         🔒 Payments secured with 256-bit SSL. ACH payments take 2–3 business days to process.
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- One-Time Payment Modal -->
+<div class="modal-overlay" *ngIf="showPayModal" (click)="closePayModal()">
+  <div class="modal-panel payment-menu" (click)="$event.stopPropagation()">
+
+    <div *ngIf="!paySuccess">
+      <div class="payment-h">Make a Payment</div>
+
+      <!-- Balance summary card -->
+      <div class="pay-balance" style="margin-bottom:20px">
+        <div class="balance-row" style="margin-bottom:10px">
+          <div>
+            <div class="bal-label">Total Amount Due</div>
+            <div class="bal-amount"><span class="cur">$</span>{{ balance.totalDue | number:'1.2-2' }}</div>
+          </div>
+          <div>
+            <div class="bal-label">Current Amount Due</div>
+            <div class="bal-amount"><span class="cur">$</span>{{ balance.currentDue | number:'1.2-2' }}</div>
+          </div>
+        </div>
+        <div style="font-size:13px;font-weight:600">
+          AutoPay: <strong [style.color]="balance.autoPay ? 'var(--success)' : 'var(--accent)'">{{ balance.autoPay ? 'ON' : 'OFF' }}</strong>
+        </div>
+      </div>
+
+      <div class="modal-error" *ngIf="payError">{{ payError }}</div>
+
+      <!-- Payment buttons — navigate to account to add payment method if none saved -->
+      <button class="pay-btn pay-btn--solid" (click)="payWithBank()" [disabled]="isPaying">
+        {{ isBankPaying ? 'Processing...' : 'One Time Payment for Rent Using Bank Account' }}
+      </button>
+      <button class="pay-btn pay-btn--solid" (click)="payWithCard()" [disabled]="isPaying">
+        {{ isCardPaying ? 'Processing...' : 'One Time Payment for Rent Using Credit Card *' }}
+      </button>
+      <button class="pay-btn pay-btn--outline" (click)="closePayModal()" [disabled]="isPaying">Cancel</button>
+
+      <p class="note-text">
+        * Prices listed under One-Time Payment Using Credit Card include a processing fee specific to credit card transactions. If you choose to pay using an eCheck (ACH), this processing fee will be removed.
+      </p>
+    </div>
+
+    <!-- Success state -->
+    <div *ngIf="paySuccess">
+      <div class="modal-success">{{ paySuccess }}</div>
+      <div class="modal-actions">
+        <button class="btn-save" (click)="closePayModal()">Done</button>
       </div>
     </div>
 

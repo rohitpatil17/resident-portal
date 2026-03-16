@@ -84,10 +84,10 @@ body.dark {
     box-shadow: 0 1px 4px rgba(0,0,0,0.4) !important;
   }
   .topbar-title { color: var(--gray-800) !important; }
-  .topbar-date  { color: var(--gray-400) !important; }
+  .topbar-date  { color: var(--gray-600) !important; }
   .hamburger    { color: var(--gray-800) !important; }
-  .theme-btn    { background: var(--surface) !important; border-color: var(--gray-200) !important; color: var(--gray-400) !important; }
-  .notif-btn    { background: var(--surface) !important; border-color: var(--gray-200) !important; color: var(--gray-400) !important; }
+  .theme-btn    { background: var(--surface) !important; border-color: var(--gray-200) !important; color: var(--gray-800) !important; }
+  .notif-btn    { background: var(--surface) !important; border-color: var(--gray-200) !important; color: var(--gray-800) !important; }
   .notif-dot    { border-color: var(--surface) !important; }
   .notif-dropdown { background: var(--surface-raised) !important; border-color: var(--gray-200) !important; }
   .notif-header { color: var(--gray-800) !important; border-bottom-color: var(--gray-200) !important; }
@@ -131,14 +131,29 @@ body.dark {
   .section-item { border-bottom-color: var(--gray-200) !important; }
 
   // billing table borders & text
-  .billing-table th { border-bottom-color: var(--gray-200) !important; }
+  .billing-table th { border-bottom-color: var(--gray-200) !important; color: var(--gray-600) !important; }
   .billing-table td { border-bottom-color: var(--gray-100) !important; }
   .bill-period { color: var(--primary-lighter) !important; }
   .billing-table .desc { color: var(--gray-600) !important; }
 
+  // billing tabs
+  .tab { color: var(--gray-600) !important; }
+  .tab.active { color: var(--purple) !important; }
+
+  // billing "View" outline button
+  .bill-btn.outline { color: var(--gray-600) !important; border-color: var(--gray-200) !important; }
+
   // account page — description text brighter, view button border more visible
   .row-desc, .page-subtitle { color: var(--gray-600) !important; }
   .btn-view { border-color: var(--gray-400) !important; color: var(--gray-600) !important; }
+
+  // account page saved payment section titles
+  .saved-section-title { color: var(--gray-600) !important; }
+  .saved-bank-label { color: var(--gray-400) !important; }
+  .saved-bank-value { color: var(--gray-800) !important; }
+
+  // policy text in account forms
+  .policy-text { color: var(--gray-600) !important; }
 
   // chatbot window — add border so it's distinguishable from page bg
   .chat-window {

@@ -221,7 +221,7 @@
     <button class="pay-btn pay-btn--solid" [disabled]="isBankLoading" (click)="saveBankAccount()">
       {{ isBankLoading ? 'Saving...' : 'Save and Continue' }}
     </button>
-    <button class="pay-btn pay-btn--outline" (click)="openPaymentMenu()">Cancel</button>
+    <button class="pay-btn pay-btn--outline" (click)="cancelPaymentForm()">Cancel</button>
   </div>
 </div>
 
@@ -280,6 +280,6 @@
     <button class="pay-btn pay-btn--solid" [disabled]="isBankLoading" (click)="saveCreditCard()">
       {{ isBankLoading ? 'Saving...' : 'Save and Continue' }}
     </button>
-    <button class="pay-btn pay-btn--outline" (click)="openPaymentMenu()">Cancel</button>
+    <button class="pay-btn pay-btn--outline" (click)="cancelPaymentForm()">Cancel</button>
   </div>
 </div>
