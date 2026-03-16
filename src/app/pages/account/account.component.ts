@@ -9,10 +9,11 @@ import { switchMap, catchError, of } from 'rxjs';
 import { ResidentService } from '../../core/services/resident.service';
 import { AuthService } from '../../core/services/auth.service';
 import { PaymentNavService } from '../../core/services/payment-nav.service';
-import { AccountSection } from '../../core/models/resident.model';
+import { AccountSection, BalanceSummary } from '../../core/models/resident.model';
 import { environment } from '../../../environments/environment';
 
 type PaymentView = 'none' | 'menu' | 'bank' | 'card' | 'details';
+type SectionView  = 'none' | 'contact' | 'cashpay' | 'addsite' | 'self' | 'autopay';
 
 interface SavedCard {
   accountNumber: string;
@@ -38,6 +39,21 @@ interface SavedBank {
 })
 export class AccountComponent implements OnInit {
   sections: AccountSection[] = [];
+
+  // ── Section Views ─────────────────────────────────────────────────────────
+  sectionView: SectionView = 'none';
+
+  contactForm = { firstName: '', lastName: '', email: '', phone: '' };
+  contactError   = '';
+  contactSuccess = '';
+
+  addSiteCode    = '';
+  addSiteError   = '';
+  addSiteSuccess = '';
+
+  autopayBalance: BalanceSummary | null = null;
+  autopayNotice  = '';
+  cashpayNotice  = '';
 
   // ── Login Modal ──────────────────────────────────────────────────────────
   showLoginModal = false;
@@ -134,6 +150,7 @@ export class AccountComponent implements OnInit {
       this.loginForm.username = user.name;
       this.loginForm.email    = user.email;
     }
+
     const openPayment = this.route.snapshot.queryParamMap.get('openPayment');
     if (openPayment === 'bank' || openPayment === 'card') {
       this.returnToPayment = true;
@@ -152,9 +169,78 @@ export class AccountComponent implements OnInit {
   // ── Section Router ───────────────────────────────────────────────────────
   viewSection(section: AccountSection): void {
     if (section.disabled) return;
-    if (section.id === 'login')        { this.openLoginModal(); }
+    if      (section.id === 'login')   { this.openLoginModal(); }
     else if (section.id === 'payment') { this.openPaymentMenu(); }
+    else if (section.id === 'contact') { this.openContact(); }
+    else if (section.id === 'autopay') { this.openAutoPay(); }
+    else if (section.id === 'cashpay') { this.sectionView = 'cashpay'; }
+    else if (section.id === 'addsite') { this.openAddSite(); }
+    else if (section.id === 'self')    { this.sectionView = 'self'; }
     else                               { alert(`Opening: ${section.title}`); }
+  }
+
+  openAutoPay(): void {
+    this.autopayBalance = null;
+    this.sectionView = 'autopay';
+    this.residentService.getBalanceSummary().subscribe(b => this.autopayBalance = b);
+  }
+
+  openContact(): void {
+    const user = this.authService.currentUser;
+    const parts = (user?.name ?? '').trim().split(' ');
+    this.contactForm = {
+      firstName: parts[0] ?? '',
+      lastName:  parts.slice(1).join(' ') ?? '',
+      email:     user?.email ?? '',
+      phone:     user?.phone ?? ''
+    };
+    this.contactError   = '';
+    this.contactSuccess = '';
+    this.sectionView    = 'contact';
+  }
+
+  saveContact(): void {
+    this.contactError = '';
+    if (!this.contactForm.email.trim()) { this.contactError = 'Email is required.'; return; }
+    this.contactSuccess = 'Contact information updated successfully.';
+    setTimeout(() => { this.contactSuccess = ''; this.sectionView = 'none'; }, 1500);
+  }
+
+  openAddSite(): void {
+    this.addSiteCode  = '';
+    this.addSiteError = '';
+    this.sectionView  = 'addsite';
+  }
+
+  submitAddSite(): void {
+    this.addSiteError   = '';
+    this.addSiteSuccess = '';
+    if (!this.addSiteCode.trim()) { this.addSiteError = 'Please enter a registration code.'; return; }
+    this.addSiteSuccess = 'Registration code submitted. We\'ll connect your site shortly.';
+    setTimeout(() => { this.addSiteSuccess = ''; this.sectionView = 'none'; }, 2000);
+  }
+
+  setupAutoPay(): void {
+    this.autopayNotice = 'AutoPay configuration is coming soon.';
+  }
+
+  findPaymentLocation(): void {
+    this.cashpayNotice = 'Payment location finder is coming soon.';
+  }
+
+  continueToSelf(): void {
+    this.closeSectionView();
+  }
+
+  closeSectionView(): void {
+    this.sectionView    = 'none';
+    this.contactError   = '';
+    this.contactSuccess = '';
+    this.addSiteCode    = '';
+    this.addSiteError   = '';
+    this.addSiteSuccess = '';
+    this.autopayNotice  = '';
+    this.cashpayNotice  = '';
   }
 
   // ── Login ────────────────────────────────────────────────────────────────

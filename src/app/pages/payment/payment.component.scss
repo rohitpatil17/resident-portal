@@ -72,6 +72,37 @@
 .total-val { font-size:16px; color:var(--navy); }                                             // ↑ was 15px
 .security-note { margin-top:14px; padding:13px; background:var(--purple-bg); border-radius:10px; font-size:12px; color:var(--gray-600); line-height:1.6; } // ↑ was 11px
 
+// ── Modal shell (shared with one-time payment) ────────────────────────────
+.modal-overlay {
+  position:fixed; inset:0; background:rgba(26,35,64,.48);
+  display:flex; align-items:center; justify-content:center; z-index:1000; padding:16px;
+}
+.modal-panel {
+  background:var(--surface); border-radius:var(--radius); padding:36px 32px 28px;
+  width:100%; max-width:520px; box-shadow:var(--shadow-lg); max-height:90vh; overflow-y:auto;
+}
+.payment-menu { max-width:480px; padding:40px 36px 32px; display:flex; flex-direction:column; }
+.payment-h { font-size:28px; font-weight:900; color:var(--navy); letter-spacing:-.5px; margin-bottom:28px; }
+.modal-error   { font-size:14px; color:var(--accent);  margin-bottom:12px; padding:9px 13px; background:#fff0f0; border-radius:8px; }
+.modal-success { font-size:14px; color:var(--success); margin-bottom:12px; padding:9px 13px; background:#f0fdf4; border-radius:8px; }
+.modal-actions { display:flex; align-items:center; justify-content:space-between; margin-top:8px; gap:12px; }
+.btn-save   { padding:12px 30px; border-radius:10px; border:none; background:var(--navy); font-family:'DM Sans',sans-serif; font-size:15px; font-weight:700; color:white; cursor:pointer; &:hover { background:var(--navy-light); } }
+
+// ── AutoPay modal summary card ─────────────────────────────────────────────
+.autopay-summary {
+  border:2px solid #22c55e; border-radius:10px; padding:20px 18px; margin-bottom:28px;
+}
+.autopay-row {
+  display:flex; align-items:center; justify-content:space-between; margin-bottom:14px;
+  &:last-child { margin-bottom:0; }
+}
+.autopay-label  { font-size:14px; font-weight:700; color:var(--navy); }
+.autopay-amount { font-size:22px; font-weight:700; color:var(--navy); }
+.autopay-badge  {
+  font-size:13px; font-weight:700; padding:3px 10px; border-radius:4px; background:#ef4444; color:#fff;
+  &--on { background:#22c55e; }
+}
+
 // ── RESPONSIVE ──────────────────────────────────────────────────────────────
 @media (max-width: 900px) {
   .payment-layout { grid-template-columns: 1fr; }

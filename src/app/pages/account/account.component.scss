@@ -329,6 +329,146 @@
   color: var(--navy);
 }
 
+// ── AutoPay ───────────────────────────────────────────────────────────────
+.autopay-summary {
+  border: 2px solid #22c55e;
+  border-radius: 10px;
+  padding: 20px 18px;
+  margin-bottom: 28px;
+}
+
+.autopay-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14px;
+  &:last-child { margin-bottom: 0; }
+}
+
+.autopay-label {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--navy);
+}
+
+.autopay-amount {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--navy);
+}
+
+.autopay-badge {
+  font-size: 13px;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 4px;
+  background: #ef4444;
+  color: #fff;
+
+  &--on {
+    background: #22c55e;
+  }
+}
+
+// ── Section description ───────────────────────────────────────────────────
+.section-desc {
+  font-size: 14px;
+  color: var(--gray-600);
+  line-height: 1.65;
+  margin: 0 0 24px;
+}
+
+// ── CashPay ───────────────────────────────────────────────────────────────
+.cashpay-card {
+  background: linear-gradient(135deg, #1a2340 0%, #2d3f6b 100%);
+  border-radius: 12px;
+  padding: 24px 22px 20px;
+  margin-bottom: 24px;
+  color: var(--white);
+}
+
+.cashpay-card-brand {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+
+.cashpay-zego {
+  font-size: 20px;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+}
+
+.cashpay-powered {
+  font-size: 12px;
+  opacity: 0.7;
+}
+
+.cashpay-label {
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  opacity: 0.7;
+  margin-bottom: 6px;
+}
+
+.cashpay-number {
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  font-variant-numeric: tabular-nums;
+}
+
+.cashpay-info { margin-bottom: 24px; }
+
+.cashpay-info-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--navy);
+  margin-bottom: 12px;
+}
+
+.cashpay-benefits {
+  padding-left: 18px;
+  margin: 0;
+  li {
+    font-size: 14px;
+    color: var(--gray-600);
+    line-height: 1.8;
+  }
+}
+
+// ── Self ──────────────────────────────────────────────────────────────────
+.self-brand {
+  font-size: 40px;
+  font-weight: 900;
+  color: #29ABE2;
+  letter-spacing: -1px;
+  margin-bottom: 12px;
+}
+
+.self-tagline {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--navy);
+  margin: 0 0 8px;
+}
+
+.self-disclosure-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--navy);
+  margin: 0 0 8px;
+}
+
+.self-disclosure {
+  font-size: 13px;
+  color: #29ABE2;
+  line-height: 1.65;
+  margin-bottom: 24px;
+}
+
 // ── Loading Spinner ───────────────────────────────────────────────────────────
 .loading-spinner {
   width: 40px;

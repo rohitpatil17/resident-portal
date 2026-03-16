@@ -226,6 +226,166 @@
 </div>
 
 <!-- ══════════════════════════════════════════════════════════
+     MANAGE AUTOPAY
+══════════════════════════════════════════════════════════ -->
+<div class="modal-overlay" *ngIf="sectionView === 'autopay'" (click)="closeSectionView()">
+  <div class="modal-panel animate" (click)="$event.stopPropagation()">
+    <h2 class="modal-title">Setup AutoPay</h2>
+
+    <div class="autopay-summary" *ngIf="autopayBalance; else apLoading">
+      <div class="autopay-row">
+        <span class="autopay-label">Total Amount Due</span>
+        <span class="autopay-amount">${{ autopayBalance.totalDue | number:'1.2-2' }}</span>
+      </div>
+      <div class="autopay-row">
+        <span class="autopay-label">Current Amount Due</span>
+        <span class="autopay-amount">${{ autopayBalance.currentDue | number:'1.2-2' }}</span>
+      </div>
+      <div class="autopay-row">
+        <span class="autopay-label">AutoPay</span>
+        <span class="autopay-badge" [class.autopay-badge--on]="autopayBalance.autoPay">
+          {{ autopayBalance.autoPay ? 'ON' : 'OFF' }}
+        </span>
+      </div>
+    </div>
+    <ng-template #apLoading>
+      <div style="display:flex; justify-content:center; padding: 24px 0;">
+        <div class="loading-spinner"></div>
+      </div>
+    </ng-template>
+
+    <div class="modal-success" *ngIf="autopayNotice">{{ autopayNotice }}</div>
+    <button class="pay-btn pay-btn--solid"   (click)="setupAutoPay()">Setup AutoPay for Rent</button>
+    <button class="pay-btn pay-btn--outline" (click)="closeSectionView()">Cancel</button>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════
+     CONTACT INFORMATION
+══════════════════════════════════════════════════════════ -->
+<div class="modal-overlay" *ngIf="sectionView === 'contact'" (click)="closeSectionView()">
+  <div class="modal-panel animate" (click)="$event.stopPropagation()">
+    <h2 class="modal-title">Contact Information</h2>
+
+    <div class="field-group">
+      <label class="field-label">First Name</label>
+      <input class="field-input field-static" type="text" [value]="contactForm.firstName" readonly />
+    </div>
+
+    <div class="field-group">
+      <label class="field-label">Last Name</label>
+      <input class="field-input field-static" type="text" [value]="contactForm.lastName" readonly />
+    </div>
+
+    <div class="field-group">
+      <label class="field-label">Email Address</label>
+      <input class="field-input" type="email" [(ngModel)]="contactForm.email" />
+    </div>
+
+    <div class="field-group">
+      <label class="field-label">Phone Number</label>
+      <input class="field-input" type="tel" [(ngModel)]="contactForm.phone" />
+    </div>
+
+    <div class="modal-error"   *ngIf="contactError">{{ contactError }}</div>
+    <div class="modal-success" *ngIf="contactSuccess">{{ contactSuccess }}</div>
+
+    <div class="modal-actions">
+      <button class="btn-cancel" (click)="closeSectionView()">Back</button>
+      <button class="btn-save"   (click)="saveContact()">Save Changes</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════
+     CASHPAY ACCOUNTS
+══════════════════════════════════════════════════════════ -->
+<div class="modal-overlay" *ngIf="sectionView === 'cashpay'" (click)="closeSectionView()">
+  <div class="modal-panel animate" (click)="$event.stopPropagation()">
+    <h2 class="modal-title">CashPay Accounts</h2>
+
+    <div class="cashpay-card">
+      <div class="cashpay-card-brand">
+        <span class="cashpay-zego">PayLease</span>
+        <span class="cashpay-powered">powered by Zego</span>
+      </div>
+      <div class="cashpay-label">My CashPay Account Number</div>
+      <div class="cashpay-number">4732-8801-9145-3306</div>
+    </div>
+
+    <div class="cashpay-info">
+      <div class="cashpay-info-title">Pay at thousands of retail locations</div>
+      <ul class="cashpay-benefits">
+        <li>Available at Walmart, CVS, 7-Eleven, and more</li>
+        <li>No bank account or credit card required</li>
+        <li>Payments post same day</li>
+        <li>Bring cash and your account number to any location</li>
+      </ul>
+    </div>
+
+    <div class="modal-success" *ngIf="cashpayNotice">{{ cashpayNotice }}</div>
+    <div class="modal-actions">
+      <button class="btn-cancel" (click)="closeSectionView()">Close</button>
+      <button class="btn-save"   (click)="findPaymentLocation()">Find Payment Location</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════
+     ADD ADDITIONAL SITE
+══════════════════════════════════════════════════════════ -->
+<div class="modal-overlay" *ngIf="sectionView === 'addsite'" (click)="closeSectionView()">
+  <div class="modal-panel animate" (click)="$event.stopPropagation()">
+    <h2 class="modal-title">Add Additional Site</h2>
+
+    <p class="section-desc">
+      Enter the registration code provided by your community to connect another site to this account.
+    </p>
+
+    <div class="field-group">
+      <label class="field-label">Registration Code</label>
+      <input class="field-input" type="text" placeholder="Enter code" [(ngModel)]="addSiteCode" />
+    </div>
+
+    <div class="modal-error"   *ngIf="addSiteError">{{ addSiteError }}</div>
+    <div class="modal-success" *ngIf="addSiteSuccess">{{ addSiteSuccess }}</div>
+
+    <div class="modal-actions">
+      <button class="btn-cancel" (click)="closeSectionView()">Cancel</button>
+      <button class="btn-save"   (click)="submitAddSite()">Submit</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════
+     SELF
+══════════════════════════════════════════════════════════ -->
+<div class="modal-overlay" *ngIf="sectionView === 'self'" (click)="closeSectionView()">
+  <div class="modal-panel animate" (click)="$event.stopPropagation()">
+    <div class="self-brand">Self.</div>
+
+    <p class="self-tagline">Add to your credit score-100% free.</p>
+    <p class="section-desc">
+      With free rent reporting by Self, rent payments can grow your credit score with all 3 bureaus.
+    </p>
+
+    <p class="self-disclosure-title">*Free Rent Reporting Disclosure</p>
+    <p class="self-disclosure">
+      Results vary. You may not receive an improved credit score. Not all bill payments may be eligible.
+      Customers who subscribed to rent and bills reporting from January to April 2023, who had a starting
+      score of over 300 but under 600, saw a positive outcome, which may have been influenced by other
+      products. Other factors, including activity with other creditors, may impact results. Not all lenders,
+      including auto and mortgage lenders, use scores impacted by rent payments.
+    </p>
+
+    <div class="modal-actions">
+      <button class="btn-cancel" (click)="closeSectionView()">Cancel</button>
+      <button class="btn-save"   (click)="continueToSelf()">Continue to Self</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════
      PAYMENT ACCOUNTS — ADD / EDIT CREDIT CARD
 ══════════════════════════════════════════════════════════ -->
 <div class="modal-overlay" *ngIf="paymentView === 'card'" (click)="closePaymentModal()">

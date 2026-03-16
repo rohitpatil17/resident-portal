@@ -84,6 +84,34 @@
   </div>
 </div>
 
+<!-- AutoPay Modal -->
+<div class="modal-overlay" *ngIf="showAutopayModal" (click)="closeAutopayModal()">
+  <div class="modal-panel payment-menu" (click)="$event.stopPropagation()">
+    <div class="payment-h">Setup AutoPay</div>
+
+    <div class="autopay-summary">
+      <div class="autopay-row">
+        <span class="autopay-label">Total Amount Due</span>
+        <span class="autopay-amount">${{ balance.totalDue | number:'1.2-2' }}</span>
+      </div>
+      <div class="autopay-row">
+        <span class="autopay-label">Current Amount Due</span>
+        <span class="autopay-amount">${{ balance.currentDue | number:'1.2-2' }}</span>
+      </div>
+      <div class="autopay-row">
+        <span class="autopay-label">AutoPay</span>
+        <span class="autopay-badge" [class.autopay-badge--on]="balance.autoPay">
+          {{ balance.autoPay ? 'ON' : 'OFF' }}
+        </span>
+      </div>
+    </div>
+
+    <div class="modal-success" *ngIf="autopayNotice">{{ autopayNotice }}</div>
+    <button class="pay-btn pay-btn--solid"   (click)="confirmSetupAutopay()">Setup AutoPay for Rent</button>
+    <button class="pay-btn pay-btn--outline" (click)="closeAutopayModal()">Cancel</button>
+  </div>
+</div>
+
 <!-- One-Time Payment Modal -->
 <div class="modal-overlay" *ngIf="showPayModal" (click)="closePayModal()">
   <div class="modal-panel payment-menu" (click)="$event.stopPropagation()">

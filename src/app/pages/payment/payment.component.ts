@@ -20,11 +20,13 @@ export class PaymentComponent implements OnInit {
   balance!: BalanceSummary;
 
   // modal state
-  showPayModal  = false;
-  payError      = '';
-  paySuccess    = '';
-  isBankPaying  = false;
-  isCardPaying  = false;
+  showPayModal     = false;
+  showAutopayModal = false;
+  autopayNotice    = '';
+  payError         = '';
+  paySuccess       = '';
+  isBankPaying     = false;
+  isCardPaying     = false;
 
   // saved tokens (loaded on init)
   bankTokenId:    string | null = null;
@@ -95,7 +97,17 @@ export class PaymentComponent implements OnInit {
   }
 
   setupAutoPay(): void {
-    alert('AutoPay setup flow would open here.');
+    this.autopayNotice    = '';
+    this.showAutopayModal = true;
+  }
+
+  closeAutopayModal(): void {
+    this.showAutopayModal = false;
+    this.autopayNotice    = '';
+  }
+
+  confirmSetupAutopay(): void {
+    this.autopayNotice = 'AutoPay configuration is coming soon.';
   }
 
   oneTimePayment(): void {

@@ -155,6 +155,13 @@ body.dark {
   // policy text in account forms
   .policy-text { color: var(--gray-600) !important; }
 
+  // new section modals
+  .section-desc    { color: var(--gray-600) !important; }
+  .cashpay-info-title { color: var(--gray-800) !important; }
+  .cashpay-benefits li { color: var(--gray-600) !important; }
+  .self-highlight-item { color: var(--gray-800) !important; }
+  .self-disclosure { color: var(--gray-400) !important; }
+
   // chatbot window — add border so it's distinguishable from page bg
   .chat-window {
     background: var(--surface-raised) !important;
