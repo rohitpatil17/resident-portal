@@ -62,3 +62,4 @@ Thumbs.db
 # environment files with secrets - local files always ignored, no exceptions
 src/environments/environment*.ts
 src/environments/environment.local*.ts
+*.code-workspace
