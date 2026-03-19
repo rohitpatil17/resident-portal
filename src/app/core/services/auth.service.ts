@@ -64,8 +64,10 @@ export class AuthService {
   }
 
   logout(): void {
+    const userId = this.currentUserSubject.value?.id ?? 'guest';
     localStorage.removeItem(TOKEN_KEY);
     localStorage.removeItem(RESIDENT_KEY);
+    localStorage.removeItem(`mai_chat_${userId}`);
     this.currentUserSubject.next(null);
     this.router.navigate(['/login']);
   }

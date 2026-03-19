@@ -1,4 +1,4 @@
-import { Component, ElementRef, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ChatService, ChatMessage } from '../../../core/services/chat.service';
@@ -19,7 +19,14 @@ import { AuthService } from '../../../core/services/auth.service';
             <div class="chat-status">Always here to help</div>
           </div>
         </div>
-        <button class="close-btn" (click)="toggle()">✕</button>
+        <div class="chat-header-actions">
+          <button class="clear-btn" *ngIf="messages.length > 0" (click)="clearHistory()" title="Clear chat">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/>
+            </svg>
+          </button>
+          <button class="close-btn" (click)="toggle()">✕</button>
+        </div>
       </div>
 
       <div class="chat-messages" #messagesContainer>
@@ -31,7 +38,10 @@ import { AuthService } from '../../../core/services/auth.service';
         </div>
 
         <div *ngFor="let msg of messages" class="message" [class.user]="msg.role === 'user'" [class.assistant]="msg.role === 'assistant'">
-          <div class="bubble">{{ msg.content }}</div>
+          <!-- user messages: plain text -->
+          <div class="bubble" *ngIf="msg.role === 'user'">{{ msg.content }}</div>
+          <!-- assistant messages: rendered markdown -->
+          <div class="bubble md" *ngIf="msg.role === 'assistant'" [innerHTML]="renderMarkdown(msg.content)"></div>
         </div>
 
         <div class="message assistant" *ngIf="loading">
@@ -125,6 +135,7 @@ import { AuthService } from '../../../core/services/auth.service';
     }
 
     .chat-header-info { display: flex; align-items: center; gap: 10px; }
+    .chat-header-actions { display: flex; align-items: center; gap: 4px; }
 
     .chat-avatar {
       width: 34px; height: 34px; border-radius: 50%;
@@ -140,6 +151,14 @@ import { AuthService } from '../../../core/services/auth.service';
       background: none; border: none; color: rgba(255,255,255,0.8);
       cursor: pointer; font-size: 14px; padding: 4px;
       &:hover { color: white; }
+    }
+
+    .clear-btn {
+      background: none; border: none; color: rgba(255,255,255,0.6);
+      cursor: pointer; padding: 4px; border-radius: 4px;
+      display: flex; align-items: center; justify-content: center;
+      transition: color 0.15s, background 0.15s;
+      &:hover { color: white; background: rgba(255,255,255,0.12); }
     }
 
     .chat-messages {
@@ -170,7 +189,7 @@ import { AuthService } from '../../../core/services/auth.service';
 
     .bubble {
       max-width: 78%; padding: 9px 13px;
-      border-radius: 16px; font-size: 13px; line-height: 1.45;
+      border-radius: 16px; font-size: 13px; line-height: 1.5;
 
       .user & {
         background: #5653A1; color: white;
@@ -179,6 +198,25 @@ import { AuthService } from '../../../core/services/auth.service';
       .assistant & {
         background: #F1F3F9; color: #1a2340;
         border-bottom-left-radius: 4px;
+      }
+    }
+
+    /* markdown rendering inside assistant bubbles */
+    .bubble.md {
+      ::ng-deep {
+        p { margin: 0 0 6px; &:last-child { margin-bottom: 0; } }
+        strong { font-weight: 700; }
+        em { font-style: italic; }
+        ul { margin: 4px 0 6px; padding-left: 16px; &:last-child { margin-bottom: 0; } }
+        li { margin-bottom: 2px; }
+        code {
+          font-family: 'Courier New', monospace;
+          font-size: 11.5px;
+          background: rgba(86,83,161,0.1);
+          color: #5653A1;
+          padding: 1px 5px;
+          border-radius: 4px;
+        }
       }
     }
 
@@ -229,7 +267,7 @@ import { AuthService } from '../../../core/services/auth.service';
     }
   `]
 })
-export class ChatbotComponent {
+export class ChatbotComponent implements OnInit {
   @ViewChild('messagesContainer') private messagesContainer!: ElementRef;
   @ViewChild('inputEl') private inputEl!: ElementRef;
 
@@ -249,12 +287,41 @@ export class ChatbotComponent {
     private auth: AuthService
   ) {}
 
+  ngOnInit(): void {
+    this.loadHistory();
+  }
+
   get firstName(): string {
     return this.auth.currentUser?.name?.split(' ')[0] ?? '';
   }
 
+  private get storageKey(): string {
+    return `mai_chat_${this.auth.currentUser?.id ?? 'guest'}`;
+  }
+
+  private loadHistory(): void {
+    try {
+      const raw = localStorage.getItem(this.storageKey);
+      if (raw) this.messages = JSON.parse(raw);
+    } catch (e) {
+      this.messages = [];
+    }
+  }
+
+  private saveHistory(): void {
+    try {
+      localStorage.setItem(this.storageKey, JSON.stringify(this.messages));
+    } catch (e) { /* storage full or unavailable */ }
+  }
+
+  clearHistory(): void {
+    this.messages = [];
+    localStorage.removeItem(this.storageKey);
+  }
+
   toggle(): void {
     this.isOpen = !this.isOpen;
+    if (this.isOpen) setTimeout(() => this.scrollToBottom(), 60);
   }
 
   sendQuick(text: string): void {
@@ -275,16 +342,52 @@ export class ChatbotComponent {
       next: res => {
         this.messages.push({ role: 'assistant', content: res.reply });
         this.loading = false;
+        this.saveHistory();
         this.scrollToBottom();
         this.focusInput();
       },
       error: () => {
         this.messages.push({ role: 'assistant', content: 'Sorry, something went wrong. Please try again.' });
         this.loading = false;
+        this.saveHistory();
         this.scrollToBottom();
         this.focusInput();
       }
     });
+  }
+
+  // lightweight markdown → safe HTML
+  renderMarkdown(text: string): string {
+    let html = text
+      // escape any existing HTML to prevent injection
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;');
+
+    // inline code (`code`)
+    html = html.replace(/`([^`]+)`/g, '<code>$1</code>');
+    // bold (**text**)
+    html = html.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+    // italic (*text*)
+    html = html.replace(/\*(.+?)\*/g, '<em>$1</em>');
+
+    // bullet lists: consecutive lines starting with "- "
+    html = html.replace(/((?:^|\n)- .+)+/g, (block) => {
+      const items = block.trim().split('\n').map(line =>
+        `<li>${line.replace(/^- /, '')}</li>`
+      ).join('');
+      return `<ul>${items}</ul>`;
+    });
+
+    // double newline → paragraph break, single newline → <br>
+    html = html
+      .split(/\n{2,}/)
+      .map(para => para.trim())
+      .filter(Boolean)
+      .map(para => para.startsWith('<ul>') ? para : `<p>${para.replace(/\n/g, '<br>')}</p>`)
+      .join('');
+
+    return html;
   }
 
   private focusInput(): void {
