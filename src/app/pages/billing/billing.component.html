@@ -74,13 +74,147 @@
   <!-- E-Billing Settings -->
   <div *ngIf="activeTab === 'settings'" class="tab-content animate delay-1">
     <div class="settings-grid">
-      <div class="settings-card" *ngFor="let s of eBillingSettings">
-        <div class="s-title">{{ s.title }}</div>
-        <div class="s-desc">{{ s.desc }}</div>
+
+      <!-- Email Notifications -->
+      <div class="settings-card" (click)="openSettingModal('email')">
+        <div class="s-card-header">
+          <div class="s-title">Email Notifications</div>
+          <span class="s-badge s-badge--on">{{ emailEnabledCount }}/3 On</span>
+        </div>
+        <div class="s-desc">Receive bill reminders and payment confirmations via email</div>
       </div>
+
+      <!-- Paperless Billing -->
+      <div class="settings-card" (click)="openSettingModal('paperless')">
+        <div class="s-card-header">
+          <div class="s-title">Paperless Billing</div>
+          <span class="s-badge" [class.s-badge--on]="paperless">{{ paperless ? 'ON' : 'OFF' }}</span>
+        </div>
+        <div class="s-desc">Switch to paperless — view bills online only</div>
+      </div>
+
+      <!-- AutoPay Settings -->
+      <div class="settings-card" (click)="openSettingModal('autopay')">
+        <div class="s-card-header">
+          <div class="s-title">AutoPay Settings</div>
+          <span class="s-badge" [class.s-badge--on]="balance.autoPay" *ngIf="balance">{{ balance.autoPay ? 'ON' : 'OFF' }}</span>
+        </div>
+        <div class="s-desc">Configure automatic payments from your bank account</div>
+      </div>
+
+      <!-- Payment Accounts -->
+      <div class="settings-card" (click)="goToPaymentAccounts()">
+        <div class="s-card-header">
+          <div class="s-title">Payment Accounts</div>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--gray-400)" stroke-width="2.5">
+            <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
+          </svg>
+        </div>
+        <div class="s-desc">Manage saved bank accounts and credit cards</div>
+      </div>
+
     </div>
   </div>
 
+</div>
+
+<!-- Email Notifications Modal -->
+<div class="s-modal-overlay" *ngIf="activeSettingModal === 'email'" (click)="closeSettingModal()">
+  <div class="s-modal-panel" (click)="$event.stopPropagation()">
+    <div class="s-modal-title">Email Notifications</div>
+    <p class="s-modal-desc">Choose which emails you'd like to receive from the portal.</p>
+
+    <div class="s-toggle-row">
+      <div>
+        <div class="s-toggle-label">Bill Ready</div>
+        <div class="s-toggle-sub">Notify me when a new bill is available</div>
+      </div>
+      <label class="toggle-switch">
+        <input type="checkbox" [(ngModel)]="emailPrefs.billReady">
+        <span class="toggle-track"></span>
+      </label>
+    </div>
+
+    <div class="s-toggle-row">
+      <div>
+        <div class="s-toggle-label">Payment Confirmation</div>
+        <div class="s-toggle-sub">Confirm after a payment is processed</div>
+      </div>
+      <label class="toggle-switch">
+        <input type="checkbox" [(ngModel)]="emailPrefs.paymentConfirm">
+        <span class="toggle-track"></span>
+      </label>
+    </div>
+
+    <div class="s-toggle-row">
+      <div>
+        <div class="s-toggle-label">Payment Due Reminder</div>
+        <div class="s-toggle-sub">Reminder before your payment due date</div>
+      </div>
+      <label class="toggle-switch">
+        <input type="checkbox" [(ngModel)]="emailPrefs.paymentReminder">
+        <span class="toggle-track"></span>
+      </label>
+    </div>
+
+    <div class="s-modal-actions">
+      <button class="s-btn-outline" (click)="closeSettingModal()">Cancel</button>
+      <button class="s-btn-solid" (click)="saveEmailPrefs()">Save Preferences</button>
+    </div>
+  </div>
+</div>
+
+<!-- Paperless Billing Modal -->
+<div class="s-modal-overlay" *ngIf="activeSettingModal === 'paperless'" (click)="closeSettingModal()">
+  <div class="s-modal-panel" (click)="$event.stopPropagation()">
+    <div class="s-modal-title">Paperless Billing</div>
+    <p class="s-modal-desc">When enabled, you'll receive bills online only — no paper mail.</p>
+
+    <div class="s-toggle-row s-toggle-row--big">
+      <div>
+        <div class="s-toggle-label">Paperless Billing</div>
+        <div class="s-toggle-sub">{{ paperless ? 'Currently ON — bills delivered online' : 'Currently OFF — paper bills active' }}</div>
+      </div>
+      <label class="toggle-switch">
+        <input type="checkbox" [(ngModel)]="paperless">
+        <span class="toggle-track"></span>
+      </label>
+    </div>
+
+    <div class="s-modal-actions">
+      <button class="s-btn-outline" (click)="closeSettingModal()">Cancel</button>
+      <button class="s-btn-solid" (click)="savePaperless()">Save</button>
+    </div>
+  </div>
+</div>
+
+<!-- AutoPay Settings Modal -->
+<div class="s-modal-overlay" *ngIf="activeSettingModal === 'autopay'" (click)="closeSettingModal()">
+  <div class="s-modal-panel" (click)="$event.stopPropagation()">
+    <div class="s-modal-title">AutoPay Settings</div>
+
+    <div class="autopay-status-box" *ngIf="balance">
+      <div class="autopay-status-row">
+        <span class="autopay-status-label">AutoPay Status</span>
+        <span class="s-badge" [class.s-badge--on]="balance.autoPay">{{ balance.autoPay ? 'ON' : 'OFF' }}</span>
+      </div>
+      <div class="autopay-status-row">
+        <span class="autopay-status-label">Total Amount Due</span>
+        <span class="autopay-status-val">{{ formatCurrency(balance.totalDue) }}</span>
+      </div>
+      <div class="autopay-status-row">
+        <span class="autopay-status-label">Due Date</span>
+        <span class="autopay-status-val">{{ balance.dueDate }}</span>
+      </div>
+    </div>
+
+    <div class="s-modal-success" *ngIf="autopayNotice">{{ autopayNotice }}</div>
+
+    <div class="s-modal-actions">
+      <button class="s-btn-outline" (click)="closeSettingModal()">Close</button>
+      <button class="s-btn-solid" (click)="confirmSetupAutopay()" [disabled]="!!autopayNotice">Setup AutoPay</button>
+    </div>
+  </div>
 </div>
 
 <!-- PDF Preview Modal -->

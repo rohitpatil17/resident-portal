@@ -2,16 +2,18 @@
 
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { ResidentService } from '../../core/services/resident.service';
 import { AuthService } from '../../core/services/auth.service';
-import { BillingStatement, Transaction } from '../../core/models/resident.model';
+import { BillingStatement, Transaction, BalanceSummary } from '../../core/models/resident.model';
 import { jsPDF } from 'jspdf';
 
 @Component({
   selector: 'app-billing',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './billing.component.html',
   styleUrls: ['./billing.component.scss']
 })
@@ -22,18 +24,37 @@ export class BillingComponent implements OnInit {
   previewUrl: SafeResourceUrl | null = null;
   private logoBase64: string | null = null;
 
-  eBillingSettings = [
-    { title: 'Email Notifications',  desc: 'Receive bill reminders and payment confirmations via email' },
-    { title: 'Paperless Billing',    desc: 'Switch to paperless — view bills online only' },
-    { title: 'AutoPay Settings',     desc: 'Configure automatic payments from your bank account' },
-    { title: 'Payment Accounts',     desc: 'Manage saved bank accounts and credit cards' },
-  ];
+  balance: BalanceSummary | null = null;
 
-  constructor(private residentService: ResidentService, private auth: AuthService, private sanitizer: DomSanitizer) {}
+  // settings modal
+  activeSettingModal: 'email' | 'paperless' | 'autopay' | null = null;
+  autopayNotice = '';
+
+  // email notification prefs
+  emailPrefs = { billReady: true, paymentConfirm: true, paymentReminder: true };
+  // paperless billing
+  paperless = false;
+
+  get emailEnabledCount(): number {
+    return [this.emailPrefs.billReady, this.emailPrefs.paymentConfirm, this.emailPrefs.paymentReminder].filter(Boolean).length;
+  }
+
+  private get prefsKey(): string {
+    return `mai_ebilling_${this.auth.currentUser?.id ?? 'guest'}`;
+  }
+
+  constructor(
+    private residentService: ResidentService,
+    private auth: AuthService,
+    private sanitizer: DomSanitizer,
+    private router: Router
+  ) {}
 
   ngOnInit(): void {
     this.residentService.getBillingStatements().subscribe(s => this.statements = s);
     this.residentService.getRecentTransactions().subscribe(t => this.transactions = t);
+    this.residentService.getBalanceSummary().subscribe(b => this.balance = b);
+    this.loadPrefs();
     fetch('assets/manage-america-logo-white.png')
       .then(r => r.blob())
       .then(blob => new Promise<string>(res => {
@@ -45,8 +66,52 @@ export class BillingComponent implements OnInit {
       .catch(e => console.log('logo load failed', e));
   }
 
+  private loadPrefs(): void {
+    try {
+      const raw = localStorage.getItem(this.prefsKey);
+      if (raw) {
+        const p = JSON.parse(raw);
+        this.emailPrefs = p.emailPrefs ?? this.emailPrefs;
+        this.paperless  = p.paperless  ?? false;
+      }
+    } catch (e) {}
+  }
+
+  private savePrefs(): void {
+    try {
+      localStorage.setItem(this.prefsKey, JSON.stringify({ emailPrefs: this.emailPrefs, paperless: this.paperless }));
+    } catch (e) {}
+  }
+
   setTab(tab: 'billing' | 'payments' | 'settings'): void {
     this.activeTab = tab;
+  }
+
+  openSettingModal(type: 'email' | 'paperless' | 'autopay'): void {
+    this.autopayNotice = '';
+    this.activeSettingModal = type;
+  }
+
+  closeSettingModal(): void {
+    this.activeSettingModal = null;
+  }
+
+  saveEmailPrefs(): void {
+    this.savePrefs();
+    this.closeSettingModal();
+  }
+
+  savePaperless(): void {
+    this.savePrefs();
+    this.closeSettingModal();
+  }
+
+  confirmSetupAutopay(): void {
+    this.autopayNotice = 'AutoPay configuration is coming soon.';
+  }
+
+  goToPaymentAccounts(): void {
+    this.router.navigate(['/account']);
   }
 
   formatCurrency(value: number): string {
