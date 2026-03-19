@@ -115,6 +115,23 @@ body.dark {
     color-scheme: dark;
   }
 
+  // login page — always light, no dark mode
+  // use .form-group to gain extra specificity and beat the rule above
+  app-login .login-right { background: #fff !important; }
+  app-login .form-group input:not([type="radio"]):not([type="checkbox"]),
+  app-login .form-group select,
+  app-login .form-group textarea {
+    background: #F8F9FC !important;
+    color: #1E293B !important;
+    border-color: #E2E6F0 !important;
+    color-scheme: light;
+  }
+  app-login .form-group input::placeholder { color: #B0BBCB !important; }
+  app-login .form-group label { color: #1E293B !important; }
+  app-login .form-header h2 { color: #1a2340 !important; }
+  app-login .form-header p  { color: #94A3B8 !important; }
+  app-login .form-footer    { color: #94A3B8 !important; }
+
   // any button using --navy as background becomes light lavender in dark mode — override all solid variants
   .pay-btn.primary, .pay-btn--solid { background: var(--primary) !important; color: #fff !important; }
   .pay-btn.secondary, .pay-btn--outline { background: var(--surface) !important; color: var(--gray-600) !important; border-color: var(--gray-200) !important; }

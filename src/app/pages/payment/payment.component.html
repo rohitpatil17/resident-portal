@@ -1,5 +1,3 @@
-<!-- src/app/pages/payment/payment.component.html -->
-
 <div class="payment-page" *ngIf="balance">
   <div class="payment-layout">
 
@@ -113,52 +111,256 @@
 </div>
 
 <!-- One-Time Payment Modal -->
-<div class="modal-overlay" *ngIf="showPayModal" (click)="closePayModal()">
+<div class="modal-overlay" *ngIf="showPayModal" (click)="payView === 'main' ? closePayModal() : null">
   <div class="modal-panel payment-menu" (click)="$event.stopPropagation()">
 
-    <div *ngIf="!paySuccess">
-      <div class="payment-h">Make a Payment</div>
+    <!-- ── Main payment choice ── -->
+    <ng-container *ngIf="payView === 'main'">
+      <div *ngIf="!paySuccess">
+        <div class="payment-h">Make a Payment</div>
 
-      <!-- Balance summary card -->
-      <div class="pay-balance" style="margin-bottom:20px">
-        <div class="balance-row" style="margin-bottom:10px">
-          <div>
-            <div class="bal-label">Total Amount Due</div>
-            <div class="bal-amount"><span class="cur">$</span>{{ balance.totalDue | number:'1.2-2' }}</div>
+        <div class="pay-balance" style="margin-bottom:20px">
+          <div class="balance-row" style="margin-bottom:10px">
+            <div>
+              <div class="bal-label">Total Amount Due</div>
+              <div class="bal-amount"><span class="cur">$</span>{{ balance.totalDue | number:'1.2-2' }}</div>
+            </div>
+            <div>
+              <div class="bal-label">Current Amount Due</div>
+              <div class="bal-amount"><span class="cur">$</span>{{ balance.currentDue | number:'1.2-2' }}</div>
+            </div>
           </div>
-          <div>
-            <div class="bal-label">Current Amount Due</div>
-            <div class="bal-amount"><span class="cur">$</span>{{ balance.currentDue | number:'1.2-2' }}</div>
+          <div style="font-size:13px;font-weight:600">
+            AutoPay: <strong [style.color]="balance.autoPay ? 'var(--success)' : 'var(--accent)'">{{ balance.autoPay ? 'ON' : 'OFF' }}</strong>
           </div>
         </div>
-        <div style="font-size:13px;font-weight:600">
-          AutoPay: <strong [style.color]="balance.autoPay ? 'var(--success)' : 'var(--accent)'">{{ balance.autoPay ? 'ON' : 'OFF' }}</strong>
+
+        <div class="modal-error" *ngIf="payError">{{ payError }}</div>
+
+        <button class="pay-btn pay-btn--solid" (click)="payWithBank()" [disabled]="isPaying">
+          {{ isBankPaying ? 'Processing...' : 'One Time Payment for Rent Using Bank Account' }}
+        </button>
+        <button class="pay-btn pay-btn--solid" (click)="payWithCard()" [disabled]="isPaying">
+          {{ isCardPaying ? 'Processing...' : 'One Time Payment for Rent Using Credit Card *' }}
+        </button>
+        <button class="pay-btn pay-btn--outline" (click)="closePayModal()" [disabled]="isPaying">Cancel</button>
+
+        <p class="note-text">
+          * Prices listed under One-Time Payment Using Credit Card include a processing fee specific to credit card transactions. If you choose to pay using an eCheck (ACH), this processing fee will be removed.
+        </p>
+      </div>
+
+      <div *ngIf="paySuccess">
+        <div class="modal-success">{{ paySuccess }}</div>
+        <div class="modal-actions">
+          <button class="btn-save" (click)="closePayModal()">Done</button>
+        </div>
+      </div>
+    </ng-container>
+
+    <!-- ── Confirm Payment ── -->
+    <ng-container *ngIf="payView === 'confirm'">
+      <div class="payment-h">One-Time Payment</div>
+
+      <!-- Balance box -->
+      <div class="confirm-balance-box">
+        <div class="confirm-bal-row">
+          <span class="confirm-bal-label">Total Amount Due</span>
+          <span class="confirm-bal-amount"><span class="cur">$</span>{{ balance.totalDue | number:'1.2-2' }}</span>
+        </div>
+        <div class="confirm-bal-row">
+          <span class="confirm-bal-label">Current Amount Due</span>
+          <span class="confirm-bal-amount"><span class="cur">$</span>{{ balance.currentDue | number:'1.2-2' }}</span>
+        </div>
+        <div class="confirm-bal-row" style="margin-bottom:0">
+          <span class="confirm-bal-label">AutoPay</span>
+          <span class="autopay-badge" [class.autopay-badge--on]="balance.autoPay">{{ balance.autoPay ? 'ON' : 'OFF' }}</span>
         </div>
       </div>
 
-      <div class="modal-error" *ngIf="payError">{{ payError }}</div>
+      <p class="confirm-note">In the event your bill does not match the total amount due, please contact your community manager.</p>
 
-      <!-- Payment buttons — navigate to account to add payment method if none saved -->
-      <button class="pay-btn pay-btn--solid" (click)="payWithBank()" [disabled]="isPaying">
-        {{ isBankPaying ? 'Processing...' : 'One Time Payment for Rent Using Bank Account' }}
+      <p class="confirm-warning">
+        It may take up to 48 hours for your payment to be reflected, and, therefore, your Total Due amount may not update immediately.
+      </p>
+      <p class="confirm-warning-es">
+        Su pago puede demorar hasta 48 horas en reflejarse y, por lo tanto, es posible que su monto total adeudado no se actualice de inmediato.
+      </p>
+
+      <p class="confirm-from-label">What account do you want to pay from?</p>
+      <p class="confirm-account" *ngIf="confirmType === 'bank'">
+        Bank account ending in {{ getMaskedAccount(bankAccountNumber || '') }}
+      </p>
+      <p class="confirm-account" *ngIf="confirmType === 'card'">
+        Credit card ending in {{ getMaskedAccount(cardAccountNumber || '') }}
+      </p>
+
+      <div class="field-group">
+        <label class="field-label">What amount would you like to pay towards your balance?</label>
+        <input class="field-input field-box" type="number" min="0.01" step="0.01" [(ngModel)]="payAmount" />
+      </div>
+
+      <p class="confirm-amount-line">Amount you will pay: <strong>{{ payAmount | currency:'USD':'symbol':'1.2-2' }}</strong></p>
+
+      <label class="confirm-auth-row">
+        <input type="checkbox" [(ngModel)]="authorized" />
+        <span class="confirm-auth-text">
+          I hereby authorize and request that you debit my bank account or charge my credit card, as selected above, for the amount specified above.
+          <br><br>
+          <em>Por la presente, autorizo y solicito que debite mi cuenta bancaria o cargue mi tarjeta de crédito, segun selecciono anteriormente, por la cantidad especificada anteriormente.</em>
+        </span>
+      </label>
+
+      <a href="#" class="confirm-agreement-link" (click)="$event.preventDefault(); showAgreementModal = true">(Read full agreement)</a>
+
+      <div class="modal-error" *ngIf="confirmError">{{ confirmError }}</div>
+
+      <button class="pay-btn pay-btn--solid" [disabled]="isConfirming || !authorized" (click)="confirmPayment()">
+        {{ isConfirming ? 'Processing...' : 'Confirm and Process Payment' }}
       </button>
-      <button class="pay-btn pay-btn--solid" (click)="payWithCard()" [disabled]="isPaying">
-        {{ isCardPaying ? 'Processing...' : 'One Time Payment for Rent Using Credit Card *' }}
-      </button>
-      <button class="pay-btn pay-btn--outline" (click)="closePayModal()" [disabled]="isPaying">Cancel</button>
+      <button class="pay-btn pay-btn--outline" [disabled]="isConfirming" (click)="backToMain()">Cancel</button>
+    </ng-container>
+
+    <!-- ── Add Bank Account ── -->
+    <ng-container *ngIf="payView === 'bank'">
+      <div class="payment-h">Add Bank Account</div>
+
+      <div class="field-group">
+        <label class="field-label">Account type</label>
+        <div class="select-wrapper">
+          <select class="field-select" [(ngModel)]="bankForm.accountType">
+            <option value="" disabled selected>Select account type</option>
+            <option *ngFor="let t of accountTypes" [value]="t">{{ t }}</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="field-group">
+        <label class="field-label">
+          Name on bank account
+          <span class="field-link">(What is this?)</span>
+        </label>
+        <input class="field-input" type="text" [(ngModel)]="bankForm.name" />
+      </div>
+
+      <div class="field-group">
+        <label class="field-label">
+          Routing number
+          <span class="field-link">(Where can I find this?)</span>
+        </label>
+        <input class="field-input field-box" type="text" maxlength="9" [(ngModel)]="bankForm.routing" />
+      </div>
+
+      <div class="field-group">
+        <label class="field-label">
+          Account number
+          <span class="field-link">(Where can I find this?)</span>
+        </label>
+        <input class="field-input" type="text" [(ngModel)]="bankForm.account" />
+      </div>
+
+      <div class="field-group">
+        <label class="field-label">Re-enter account number</label>
+        <input class="field-input" type="text" [(ngModel)]="bankForm.reAccount" />
+      </div>
 
       <p class="note-text">
-        * Prices listed under One-Time Payment Using Credit Card include a processing fee specific to credit card transactions. If you choose to pay using an eCheck (ACH), this processing fee will be removed.
+        Note: the routing and account numbers may not be the same as the numbers on your check
+        or deposit ticket. Confirm with your banker for the correct routing and account numbers
+        for online ACH payments.
       </p>
-    </div>
 
-    <!-- Success state -->
-    <div *ngIf="paySuccess">
-      <div class="modal-success">{{ paySuccess }}</div>
-      <div class="modal-actions">
-        <button class="btn-save" (click)="closePayModal()">Done</button>
+      <div class="modal-error"   *ngIf="bankError">{{ bankError }}</div>
+      <div class="modal-success" *ngIf="bankSuccess">{{ bankSuccess }}</div>
+
+      <button class="pay-btn pay-btn--solid"   [disabled]="isBankLoading" (click)="saveBankAccount()">
+        {{ isBankLoading ? 'Saving...' : 'Save and Continue' }}
+      </button>
+      <button class="pay-btn pay-btn--outline" [disabled]="isBankLoading" (click)="backToMain()">Cancel</button>
+    </ng-container>
+
+    <!-- ── Add Credit Card ── -->
+    <ng-container *ngIf="payView === 'card'">
+      <div class="payment-h">Add Credit Card</div>
+
+      <div class="field-group">
+        <label class="field-label">Cardholder name</label>
+        <input class="field-input" type="text" [(ngModel)]="cardForm.cardholderName" />
       </div>
-    </div>
 
+      <div class="field-group">
+        <label class="field-label">Card number</label>
+        <input class="field-input" type="text" [(ngModel)]="cardForm.cardNumber" />
+      </div>
+
+      <div class="field-group">
+        <label class="field-label">Re-enter card number</label>
+        <input class="field-input" type="text" [(ngModel)]="cardForm.reCardNumber" />
+      </div>
+
+      <div class="field-group">
+        <label class="field-label">Expiration month</label>
+        <div class="select-wrapper">
+          <select class="field-select" [(ngModel)]="cardForm.expirationMonth">
+            <option value="" disabled selected>MM</option>
+            <option *ngFor="let m of months" [value]="m">{{ m }}</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="field-group">
+        <label class="field-label">Expiration year</label>
+        <div class="select-wrapper">
+          <select class="field-select" [(ngModel)]="cardForm.expirationYear">
+            <option value="" disabled selected>YYYY</option>
+            <option *ngFor="let y of years" [value]="y">{{ y }}</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="field-group">
+        <label class="field-label">CVV</label>
+        <input class="field-input field-box" type="text" maxlength="4" [(ngModel)]="cardForm.cvv" />
+      </div>
+
+      <div class="modal-error"   *ngIf="cardError">{{ cardError }}</div>
+      <div class="modal-success" *ngIf="cardSuccess">{{ cardSuccess }}</div>
+
+      <button class="pay-btn pay-btn--solid"   [disabled]="isBankLoading" (click)="saveCreditCard()">
+        {{ isBankLoading ? 'Saving...' : 'Save and Continue' }}
+      </button>
+      <button class="pay-btn pay-btn--outline" [disabled]="isBankLoading" (click)="backToMain()">Cancel</button>
+    </ng-container>
+
+  </div>
+</div>
+
+<!-- Full Agreement Modal -->
+<div class="modal-overlay" *ngIf="showAgreementModal" (click)="showAgreementModal = false">
+  <div class="modal-panel agreement-panel animate" (click)="$event.stopPropagation()">
+    <p class="agreement-text">
+      I hereby authorize and request that you debit my bank account or charge my credit card, as
+      selected above, for the amount specified above. I have previously provided my payment account
+      information to you under the "Manage Account" section of "My Account". If the authorized
+      payment amount is not available in my bank account or the charge is declined on my credit card,
+      I will be charged late fees and/or returned payment fees per my Lease or Rental Agreement, as
+      well as any insufficient funds or overdraft fees that may be charged by my bank or card issuer.
+      I understand that it is my responsibility to ensure that sufficient available funds or credit
+      is available to cover the payment on the date of the transaction.
+    </p>
+    <p class="agreement-text">
+      I further understand that if I close or change my designated payment account, I will update my
+      payment information in "My Account" prior to my next payment. This one-time payment authorization
+      applies only to the single transaction initiated above and does not create a recurring payment
+      obligation.
+    </p>
+    <p class="agreement-text">
+      I understand, acknowledge, and agree that by clicking "Confirm and Process Payment", I am
+      providing my electronic signature (otherwise known as a "writing signed by me") to authorize
+      this one-time payment.
+    </p>
+    <div class="agreement-actions">
+      <button class="btn-save" (click)="showAgreementModal = false">Close</button>
+    </div>
   </div>
 </div>

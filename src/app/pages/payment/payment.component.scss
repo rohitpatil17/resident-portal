@@ -103,6 +103,91 @@
   &--on { background:#22c55e; }
 }
 
+// ── Confirm Payment view ──────────────────────────────────────────────────
+.confirm-balance-box {
+  border: 2px solid var(--success); border-radius: 10px; padding: 18px 16px; margin-bottom: 18px;
+}
+.confirm-bal-row {
+  display: flex; align-items: baseline; justify-content: space-between;
+  margin-bottom: 14px;
+  &:last-child { margin-bottom: 0; }
+}
+.confirm-bal-label  { font-size: 13px; font-weight: 700; color: var(--success); }
+.confirm-bal-amount { font-size: 26px; font-weight: 700; color: var(--success); }
+.confirm-note       { font-size: 13px; color: var(--gray-400); line-height: 1.6; margin-bottom: 16px; }
+.confirm-warning    { font-size: 15px; color: var(--accent); font-weight: 600; line-height: 1.6; margin-bottom: 8px; }
+.confirm-warning-es { font-size: 14px; color: var(--accent); line-height: 1.6; margin-bottom: 20px; }
+.confirm-from-label { font-size: 13px; color: var(--gray-400); margin-bottom: 6px; }
+.confirm-account    { font-size: 22px; font-weight: 700; color: var(--navy); margin-bottom: 20px; }
+.confirm-amount-line {
+  font-size: 14px; color: var(--gray-600); margin-bottom: 20px;
+  strong { color: var(--navy); }
+}
+.confirm-auth-row {
+  display: flex; gap: 12px; align-items: flex-start; margin-bottom: 14px; cursor: pointer;
+  input[type="checkbox"] { flex-shrink: 0; margin-top: 3px; width: 18px; height: 18px; accent-color: var(--primary); cursor: pointer; }
+}
+.confirm-auth-text { font-size: 13px; color: var(--gray-600); line-height: 1.65; }
+.confirm-agreement-link {
+  display: block; font-size: 13px; color: var(--primary-light); text-decoration: none;
+  margin-bottom: 20px;
+  &:hover { text-decoration: underline; }
+}
+
+// ── Full Agreement Modal ───────────────────────────────────────────────────
+.agreement-panel { max-width: 560px; }
+.agreement-text {
+  font-size: 14px; color: var(--gray-600); line-height: 1.8;
+  text-align: justify; margin-bottom: 20px;
+  &:last-of-type { margin-bottom: 0; }
+}
+.agreement-actions {
+  display: flex; justify-content: flex-end; margin-top: 24px;
+}
+
+// ── Form Fields (bank / card entry inside modal) ──────────────────────────
+.field-group { margin-bottom: 22px; }
+
+.field-label {
+  display: block; font-size: 14px; color: var(--gray-600); margin-bottom: 7px;
+}
+
+.field-link {
+  color: var(--navy); font-size: 13px; margin-left: 4px; cursor: pointer;
+  &:hover { text-decoration: underline; }
+}
+
+.field-input {
+  width: 100%; border: none; border-bottom: 1.5px solid var(--gray-200);
+  padding: 9px 0; font-family: 'DM Sans', sans-serif; font-size: 15px;
+  color: var(--navy); outline: none; background: transparent; transition: border-color .2s;
+  &::placeholder { color: var(--gray-400); font-size: 14px; }
+  &:focus { border-bottom-color: var(--navy); }
+}
+
+.field-box {
+  border: 1.5px solid var(--gray-200); border-radius: 6px; padding: 11px 12px; width: 100%;
+  &:focus { border-color: var(--navy); outline: none; }
+}
+
+.select-wrapper {
+  position: relative;
+  &::after {
+    content: '▼'; position: absolute; right: 8px; top: 50%; transform: translateY(-50%);
+    font-size: 11px; color: var(--navy); pointer-events: none;
+  }
+}
+
+.field-select {
+  width: 100%; appearance: none; -webkit-appearance: none;
+  border: none; border-bottom: 1.5px solid var(--gray-200);
+  padding: 9px 28px 9px 0; font-family: 'DM Sans', sans-serif;
+  font-size: 15px; color: var(--navy); background: transparent;
+  outline: none; cursor: pointer; transition: border-color .2s;
+  &:focus { border-bottom-color: var(--navy); }
+  option[disabled] { color: var(--gray-400); }
+}
+
 // ── RESPONSIVE ──────────────────────────────────────────────────────────────
 @media (max-width: 900px) {
   .payment-layout { grid-template-columns: 1fr; }
